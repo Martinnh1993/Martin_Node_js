@@ -1,37 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        #title{
-            color: red;
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>First HTML Server</title>
+    <title>Calculate Time Difference</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="date"],
+        input[type="time"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+        /* Adjust the width of the time input to match the date input */
+        input[type="time"] {
+            width: calc(100% - 2px); /* Subtract 2px for border */
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #welcomeMessage {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            border: 2px solid #007bff;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f7f7f7;
+        }
+    </style>
+
 </head>
 <body>
-
-    <h1 id="title">Home</h1>
-    
-    <h3>This is now deployed!</h3>
-    
-    <script>
-    //   async function welcomeMessage() {
-    //     const response = await fetch("http://localhost:8080/welcomeMessage");
-    //     const message = await response.json();
-    //     console.log(message);
-    // }
-    // welcomeMessage();
-
-        fetch("/welcomeMessage?/user=Martin")
-        .then((response) => response.json())
-        .then((result) => {
-            const welcomeMessageHeader = document.getElementById("welcomeMessage");
-            welcomeMessageHeader.innerText = result.data;
-        });
-    </script>
-
     <h2 id="welcomeMessage"></h2>
+
+    <form id="birthdateForm">
+        <label for="birthdate">Enter Your Birthdate:</label>
+        <input type="date" id="birthdate" name="birthdate" required>
+        <label for="birthtime">Enter Your approximant Birthtime:</label>
+        <input type="time" id="birthtime" name="birthtime" required>
+        <button type="submit">Calculate</button>
+    </form>
+    <br>
+    <div id="result"></div>
+
+    <script>
+        const updateWelcomeMessage = (name) => {
+            const welcomeMessageHeader = document.getElementById("welcomeMessage");
+            welcomeMessageHeader.innerText = `Welcome, ${name}!`;
+        };
+
+        document.getElementById("birthdateForm").addEventListener("submit", function(event) {
+            event.preventDefault(); 
+            
+            const birthdateInput = document.getElementById("birthdate").value;
+            const birthtimeInput = document.getElementById("birthtime").value;
+
+            const birthDatetimeString = `${birthdateInput}T${birthtimeInput}`;
+            const birthDatetime = new Date(birthDatetimeString);
+            const birthdateTimestamp = birthDatetime.getTime() / 1000;
+            const epochStartTimestamp = new Date("1970-01-01T00:00:00").getTime() / 1000; 
+            const timeDifference = birthdateTimestamp - epochStartTimestamp;
+
+            let message = "";
+            if (timeDifference > 0) {
+                message = `You were born ${Math.abs(timeDifference)} seconds after Unix time.`;
+            } else if (timeDifference === 0) {
+                message = `You were born exactly at Unix time.`;
+            } else {
+                message = `You were born ${Math.abs(timeDifference)} seconds before Unix time.`;
+            }
+
+            document.getElementById("result").textContent = message;
+        });
+
+        const userName = prompt("Please enter your name:");
+        if (userName) {
+            updateWelcomeMessage(userName);
+        }
+    </script>
 </body>
 </html>
