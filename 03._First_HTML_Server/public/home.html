@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        #title{
+            color: red;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First HTML Server</title>
+</head>
+<body>
+
+    <h1 id="title">Home</h1>
+    
+    <h3>This is now deployed!</h3>
+    
+    <script>
+    //   async function welcomeMessage() {
+    //     const response = await fetch("http://localhost:8080/welcomeMessage");
+    //     const message = await response.json();
+    //     console.log(message);
+    // }
+    // welcomeMessage();
+
+        fetch("/welcomeMessage?/user=Martin")
+        .then((response) => response.json())
+        .then((result) => {
+            const welcomeMessageHeader = document.getElementById("welcomeMessage");
+            welcomeMessageHeader.innerText = result.data;
+        });
+    </script>
+
+    <h2 id="welcomeMessage"></h2>
+</body>
+</html>
