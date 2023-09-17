@@ -84,24 +84,19 @@
 
 </head>
 <body>
-    <h2 id="welcomeMessage"></h2>
+    <h2>Welcome to the Time Difference Calculator</h2>
 
     <form id="birthdateForm">
         <label for="birthdate">Enter Your Birthdate:</label>
         <input type="date" id="birthdate" name="birthdate" required>
-        <label for="birthtime">Enter Your approximant Birthtime:</label>
+        <label for="birthtime">Enter Your Birthtime:</label>
         <input type="time" id="birthtime" name="birthtime" required>
         <button type="submit">Calculate</button>
     </form>
-    <br>
+    
     <div id="result"></div>
 
     <script>
-        const updateWelcomeMessage = (name) => {
-            const welcomeMessageHeader = document.getElementById("welcomeMessage");
-            welcomeMessageHeader.innerText = `Welcome, ${name}!`;
-        };
-
         document.getElementById("birthdateForm").addEventListener("submit", function(event) {
             event.preventDefault(); 
             
@@ -125,11 +120,6 @@
 
             document.getElementById("result").textContent = message;
         });
-
-        const userName = prompt("Please enter your name:");
-        if (userName) {
-            updateWelcomeMessage(userName);
-        }
     </script>
 </body>
 </html>
