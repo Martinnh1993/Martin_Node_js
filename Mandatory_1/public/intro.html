@@ -1,17 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="../style.css"/>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Code">
+
 </head>
+<body>
+  <header>
+        <!-- Navbar -->
+    <div class="topnav">
+      <a class="active" href="intro.html">Introduction</a>
+      <a href="firstServer.html">First Server</a>
+      <a href="serving.html">Serving HTML</a>
+      <a href="time.html">Time</a>
+      <a href="exportImport.html">Export / Import</a>
+      <a href="ssr.html">Server side rendering</a>
+    </div>
+  </header>
 
-<!-- Navbar -->
-<div class="topnav">
-    <a href="home.html">Home</a>
-    <a class="active" href="intro.html">Introduction</a>
-    <a href="firstServer.html">First Server</a>
-    <a href="serving.html">Serving HTML</a>
-    <a href="time.html">Time</a>
-    <a href="exportImport.html">Export / Import</a>
-    <a href="serverSide.html">Server side vs Client Side</a>
-    <a href="ssr.html">Server side rendering</a>
-  </div>
+  <main>
+    <div class="text-box">
+      <pre class="custom-code">
+        <code>
+          <span class="comment">// Use const whenever possible</span>
+          const scheduledBreakTime = "09:27";
+          let consoleLogCounter = 0;
+  
+          <span class="comment">// Use comma in console log</span>
+          console.log("Let's take a break at:", scheduledBreakTime);
+          consoleLogCounter++;
+  
+          <span class="comment">// String, Number, Boolean, BigInteger, undefined, null, Object, Symbol</span>
+          <span class="comment">// Object: Object, Array, Date</span>
+  
+          <span class="comment">// type coercion</span>
+  
+          <span class="comment">// The 3 ways to make strings</span>
+          console.log("This is the first '''''' way");
+          console.log('This is the second """""" way');
+          console.log(`This is the ${2 + 1}rd '''''' """"""" way ${scheduledBreakTime}.`);
+          consoleLogCounter += 3;
+  
+          console.log(consoleLogCounter);
+        </code>
+      </pre>
+  
+      <h2>Intro</h2>
+      
+  <pre>
+  <strong>Definition of NodeJS:</strong>
+  Chrome includes a V8 JavaScript runtime engine.
+  Node JS is a runtime environment for JavaScript, taken out of the browser.
+  In the past, JavaScript could only run in the browser.
+  Node JS can be used to create servers, scripts, apps, terminal applications, and command-line interfaces.
+        
+  <strong>JavaScript Data Types:</strong>
+  JavaScript supports various data types, each serving a specific purpose:
+        
+    - Number: Used for numeric values, both integers and decimals.
+    - String: Represents text and is enclosed in single or double quotes.
+    - Boolean: Represents true or false values.
+    - Float: A floating-point number, essentially a decimal value.
+    - BigInt: Used for very large integer values that can't be represented by the Number type.
+    - Undefined: Denotes a variable that has been declared but hasn't been assigned a value.
+    - Null: Represents the absence of any value or object.
+    - Symbol: A unique and immutable data type often used as object property keys.
+    - Object: An aggregate data type that can hold various data and methods. It includes objects, arrays, symbols, and dates.
+       
+  Understanding these data types is crucial when working with JavaScript, 
+  as it allows you to manipulate data effectively and make informed decisions in your code.
+        
+  <strong>REPL (Read, Evaluate, Print, Loop):</strong>
+  REPL stands for Read, Evaluate, Print, Loop. It is an interactive programming environment used for testing and executing code snippets. 
+  In NodeJS, you can access the REPL environment by simply running the "node" command in your terminal. 
+  It's a great way to quickly experiment with JavaScript code.
+      
+  <strong>HTTP Conventions:</strong>
+  HTTP conventions dictate the order of HTTP methods, providing a standardized approach to handling requests. 
+  These conventions include:     
+    - GET
+    - POST
+    - PATCH
+    - PUT
+    - DELETE
+        
+  Each HTTP method serves a specific purpose, and it's important to follow these conventions when designing web applications. 
+  For instance, the GET method is used for retrieving data, while POST is employed for submitting data to be processed.
+  </pre>
+        
+      
+      <!-- Add any more sections or content here as needed -->
+    </div>
+  </main>
+  
+  
+  
 
-<h2>Intro</h2>
+</body>
+</html>

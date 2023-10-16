@@ -1,18 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="../style.css"/>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Code">
+
 </head>
+<body>
+  <header>
+        <!-- Navbar -->
+    <div class="topnav">
+      <a href="intro.html">Introduction</a>
+      <a href="firstServer.html">First Server</a>
+      <a class="active" href="serving.html">Serving HTML</a>
+      <a href="time.html">Time</a>
+      <a href="exportImport.html">Export / Import</a>
+      <a href="ssr.html">Server side rendering</a>
+    </div>
+  </header>
 
-<!-- Navbar -->
-<div class="topnav">
-    <a href="home.html">Home</a>
-    <a href="intro.html">Introduction</a>
-    <a href="firstServer.html">First Server</a>
-    <a class="active" href="serving.html">Serving HTML</a>
-    <a href="time.html">Time</a>
-    <a href="exportImport.html">Export / Import</a>
-    <a href="serverSide.html">Server side vs Client Side</a>
-    <a href="ssr.html">Server side rendering</a>
+  <main>
+    <div class="text-box">
 
-  </div>
+<pre class="custom-code">
+  <code>
+      Description:
+      This code includes route definitions and module import for an Express.js application 
+      It imports the "welcomeMessageUtil.js" module, 
+      handles GET requests for the root path and "/secondPage," 
+      and responds by sending HTML files located in the "public" directory.
+
+      <span class="comment">Importing a Custom Modul</span>
+      const { getWelcomeMessage } = require("./util/welcomeMessageUtil.js");
+
+      <span class="comment">// Handling a GET Request for the Root Path</span>
+      app.get("/", (req, res) => {
+          res.sendFile(__dirname + "/public/home.html");
+      });
+
+      <span class="comment">// Handling a GET Request for "/secondPage"</span>
+      app.get("/secondPage", (req, res) => {
+          res.sendFile(__dirname + "/public/secondPage.html");
+      });
+  </code>
+</pre>
+
+
 
 <h2>Servering HTML page</h2>
+
+<pre>
+  <strong>Nodemon:</strong>
+  Nodemon is a helpful development tool for Node.js applications. 
+  It automatically restarts the Node server whenever it detects changes in your code, 
+  providing a convenient way to streamline development without manually restarting the server.
+  
+  <strong>Loops and Loop Methods in JavaScript:</strong>
+  JavaScript offers various mechanisms for creating and managing loops, 
+  allowing you to repeat a set of instructions. Loop methods like for, while, 
+  and forEach make it possible to iterate over arrays, objects, and other data structures. 
+  Understanding how to use loops is crucial for controlling the flow of your code and handling repetitive tasks.
+  
+  <strong>CRUDable REST API - Part I:</strong>
+  In the world of web development, CRUD stands for Create, Read, Update, and Delete. 
+  These operations represent the fundamental actions that can be performed on data in a web application. 
+  In this part, you'll learn how to create a RESTful API that allows you to perform these actions. 
+  REST (Representational State Transfer) defines a set of conventions for structuring URLs and handling HTTP requests for building web services.
+  
+  <strong>Anatomy of a URL:</strong>
+  A URL (Uniform Resource Locator) is the web address that identifies a resource on the internet. 
+  It consists of several components, including the protocol (e.g., HTTP or HTTPS), domain name, path, and query parameters. 
+  Understanding the structure of a URL is important for web development, 
+  as it's the basis for making requests to web servers and handling routing in your applications.
+  
+  <strong>Serving HTML in Express:</strong>
+  In an Express.js application, you can serve HTML files to clients' web browsers. 
+  This is useful for displaying web pages and rendering user interfaces. 
+  By sending HTML files as responses to specific routes, 
+  you can create dynamic and interactive web applications.
+  </pre>
+
+  <pre class="custom-code">
+    <code>
+      Description:
+      This code handles a GET request for the "welcomeMessage" 
+      route and extracts the "user" query parameter.
+      It uses the "getWelcomeMessage" function to generate a welcome message 
+      for the specified user and sends it as a response.
+      
+      <span class="comment">// script for greating</span>
+      app.get("/welcomeMessage", (req, res) => {
+          const clientName = req.query.user;
+          const welcomeMessage = getWelcomeMessage(clientName);
+          res.send({ data: welcomeMessage })
+      });
+  
+      <span class="comment">// html part</span>
+      &lt;h3 id="welcomeMessage"&gt;&lt;/h3&gt;
+      
+    </code>
+  </pre>
+
+</main>
+  

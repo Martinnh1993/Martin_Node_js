@@ -1,38 +1,79 @@
 body {
+  background-image: url('images/background.jpg');
+  background-size: cover; 
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
   margin: 0px;
+}
+
+
+/* Define styles for the code container */
+.custom-code {
+  margin-right: 50px;
+  float: right;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  font-family: "Fira Code", monospace;
+  font-size: 14px;
+  padding-top: 5px;
+  padding-left: 0px;
+  border-radius: 4px;
+  overflow-x: auto;
+  width: 700px;
+}
+
+/* Define styles for code within the container */
+.custom-code code {
+  display: block;
+  white-space: pre;
+}
+
+/* Style comments that start with // within code snippets */
+.custom-code .comment {
+  color: #0000ff; /* Set a different color for comments */
+}
+
+
+
+/*text box styling */
+.text-box {
+  margin: 10px;
 }
 
 .container {
   display: flex;
-  margin-left: 50%;
+  margin-left: 40%;
   margin-top: 200px;
 }
 
 form {
-  background-color: #04AA6D;
+  background-color: #0000ff;
+  color: #1e1e1e;
   display: flex;
   flex-direction: column;
   padding:  50px;
-  border: 2px solid black;
+  border: 2px solid #1e1e1e;
 }
 
 form input {
   margin: 10px;
   height: 40px;
   width: 200px;
-  border: 2px solid black;
+  border: 2px solid #1e1e1e;
   border-radius: 10px;
 }
 
-footer h2.title {
+form h2.title {
   font-size: 200%;
   text-align: center;
+  
 }
+
 
 
 
 .topnav {
-  background-color: #333;
+  background-color: #1e1e1e;
     overflow: hidden;
   }
   
@@ -54,6 +95,37 @@ footer h2.title {
   
   /* Add a color to the active/current link */
   .topnav a.active {
-    background-color: #04AA6D;
+    background-color: #0000ff;
     color: white;
   }
+
+  #typewriter {
+    float: left;
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    font-family: "Fira Code", monospace;
+    font-size: 14px;
+    padding: 5px;
+    border-radius: 4px;
+    width: 45%;
+    margin-left: 30px;
+    text-align: left;
+  }
+  
+  #typewriter p {
+    margin: 0;
+    padding-left: 10px;
+  }
+  
+  #typewriter button {
+    background-color: transparent;
+    border: none;
+    color: #d4d4d4;
+    cursor: pointer;
+  }
+
+  #typewriter a{
+    color: #0000ff;
+  }
+  
+  

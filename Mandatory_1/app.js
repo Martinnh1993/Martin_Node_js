@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 
+app.set('view engine', 'ejs');
+
 app.use(express.static(path.join(__dirname, "public")));
 
 
@@ -10,7 +12,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/home", (req, res) => {
-    res.sendFile(__dirname + "/public/home.html");
+    res.sendFile(__dirname + "/public/intro.html");
 });
 
 var users = [
@@ -29,7 +31,7 @@ function check(req, res) {
     const user = users.find(user => user.username === userid && user.password === pswrd);
 
     if (user) {
-        res.redirect("/home.html"); // Redirect to the second page on successful login
+        res.redirect("/intro.html"); // Redirect to the second page on successful login
     } else {
         res.send("Error: Incorrect Password or Username"); // Send an error message
     }

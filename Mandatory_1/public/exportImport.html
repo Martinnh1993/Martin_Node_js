@@ -1,18 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="../style.css"/>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Code">
+
 </head>
+<body>
+  <header>
+        <!-- Navbar -->
+    <div class="topnav">
+      <a href="intro.html">Introduction</a>
+      <a href="firstServer.html">First Server</a>
+      <a href="serving.html">Serving HTML</a>
+      <a href="time.html">Time</a>
+      <a class="active" href="exportImport.html">Export / Import</a>
+      <a href="ssr.html">Server side rendering</a>
+    </div>
+  </header>
 
-<!-- Navbar -->
-<div class="topnav">
-    <a href="home.html">Home</a>
-    <a href="intro.html">Introduction</a>
-    <a href="firstServer.html">First Server</a>
-    <a href="serving.html">Serving HTML</a>
-    <a href="time.html">Time</a>
-    <a class="active" href="exportImport.html">Export / Import</a>
-    <a href="serverSide.html">Server side vs Client Side</a>
-    <a href="ssr.html">Server side rendering</a>
+  <main>
+    <div class="text-box">
 
-  </div>
+<pre class="custom-code">
+    <code>
+  Description:
+  This Svelte code snippet demonstrates the interaction between multiple components 
+  in a Svelte application. It highlights the usage of export and import statements 
+  for data sharing and modularity
+  
+  &lt;script&gt;
+  <span class="comment">// Exported Variables</span>
+      export let name;
+      export let myChildren;
+      
+      <span class="comment">// Importing Child Component</span>
+      import Child from "./Child.svelte";
+      
+      <span class="comment">// Importing Fridge Messages Store</span>
+      import { fridgeMessages } from "./fridgeMessagesStore.js"
+      function eraseFridgeMessages() {
+        <span class="comment">// Reset the fridge messages to a default value</span>
+        fridgeMessages.set(["Fridge Messages Below"]);
+      
+      let cookieJar = ["🍪", "🍪", "🍪", "🍪", "🍪"]
+      function handleEatCookie() {
+        <span class="comment">// Remove a cookie from the cookie jar</span>
+          cookieJar.pop();
+          if (cookieJar.length === 0) {
+              fillCookieJar();
+          }
+      
+      function fillCookieJar() {
+        <span class="comment">// Refill the cookie jar</span>
+        cookieJar = ["🍪", "🍪", "🍪", "🍪", "🍪"];
+      
+      function handleShowLove(childName) {
+        <span class="comment">// Display a message when love is shown</span>
+        console.log(`My name is ${name} and ${childName} loves me.`);
+      }
+  &lt;/script&gt
+  &lt;h1&gt;{name}&lt;/h1&gt;
+  &lt;p&gt;{cookieJar}&lt;/p&gt
+  &lt;button on:click={eraseFridgeMessages}&gt;Erase Fridge Messages&lt;/button&gt
+  {#each myChildren as child}
+      &lt;Child child={child} onEatCookie={handleEatCookie} onShowLove={handleShowLove}&gt;
+  {/each}
+    </code>
+</pre>
+   
+<pre>
+  <strong>Exporting vs. Importing in Frontend (type="module" attribute):</strong>
+  In modern JavaScript development, you can create modular code by using the ES6 module system. 
+  When working with frontend scripts, you can use the `type="module"` attribute in your HTML script tags to indicate that you're using ES6 modules. 
+  This allows you to export functions, classes, or variables from one module and import them in another.
+  
+  <strong>CommonJS vs. Type Module in Node.js:</strong>
+  Node.js traditionally uses the CommonJS module system. 
+  However, you can use ES6 modules in Node.js by using the `--experimental-modules` flag. 
+  CommonJS modules use `require` and `module.exports`, while ES6 modules use `import` and `export.
+  
+  <strong>Serving Static Files in Express:</strong>
+  When building web applications with Express, you can serve static files (e.g., HTML, CSS, JavaScript, images) 
+  using the `express.static` middleware. 
+  This middleware allows you to specify a directory from which static assets are served.
+  
+  <strong>Cross-Site Scripting (XSS):</strong>
+  XSS is a common web security vulnerability that occurs when untrusted data from users is included in a web page. 
+  It allows attackers to inject malicious scripts into web pages viewed by other users. 
+  To prevent XSS attacks, validate and sanitize user inputs, and avoid directly inserting user inputs into HTML.
+  </pre>
+  
 
-<h2>Export/Import</h2>
+    </div>
+  </main>
+  
+  
+  
+
+</body>
+</html>

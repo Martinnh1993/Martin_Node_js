@@ -1,18 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="../style.css"/>
-</head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Code">
+  <script src="typewriter.js"></script>
 
-<!-- Navbar -->
-<div class="topnav">
-    <a href="home.html">Home</a>
-    <a href="intro.html">Introduction</a>
-    <a href="firstServer.html">First Server</a>
-    <a href="serving.html">Serving HTML</a>
-    <a href="time.html">Time</a>
-    <a href="exportImport.html">Export / Import</a>
-    <a href="serverSide.html">Server side vs Client Side</a>
-    <a class="active" href="ssr.html">Server side rendering</a>
+</head>
+<body>
+  <header>
+        <!-- Navbar -->
+    <div class="topnav">
+      <a href="intro.html">Introduction</a>
+      <a href="firstServer.html">First Server</a>
+      <a href="serving.html">Serving HTML</a>
+      <a href="time.html">Time</a>
+      <a href="exportImport.html">Export / Import</a>
+      <a class="active" href="ssr.html">Server side rendering</a>
+    </div>
+  </header>
+
+
+    
+  </pre>
+  
+    <pre class="custom-code">
+      <code>
+  Description:
+  This code creates a typewriter effect that displays a set of lines character 
+  by character. It starts when a button is clicked and can be used to 
+  gradually reveal text to the user.
+
+  <span class="comment">//Array of text lines to be displayed</span>
+  const lines = [
+  // the text
+  ];
+
+  <span class="comment">// Speed at which characters are displayed (in milliseconds)</span>
+  const speed = 50;
+
+  <span class="comment">// Initialize character index</span>
+  let charIndex = 0;
+
+  <span class="comment">// Function to create the typewriter effect</span>
+  function typeWriter() {
+    <span class="comment">// Get elements where text should be displayed</span>
+    const lineElements = lines.map((_, index) => document.getElementById(`line${index + 1}`));
+    <span class="comment">// Function to write a single character</span>
+    function writeCharacter() {
+      lineElements.forEach((element, index) => {
+        if (charIndex < lines[index].length) {
+          element.textContent += lines[index].charAt(charIndex);
+        }
+      });
+      charIndex++;
+      if (charIndex < lines[0].length) {
+        setTimeout(writeCharacter, speed);
+      }
+    }
+    <span class="comment">// Start the typewriter effect</span>
+    setTimeout(writeCharacter, speed);
+  }
+  <span class="comment">// Function to start the typewriter effect when a button is clicked</span>
+  function startTypewriter(button) {
+    <span class="comment">// Hide the button</span>
+    button.style.display = "none";
+    
+    <span class="comment">// Start the typewriter effect</span>
+    typeWriter();
+    <span class="comment">// Display additional content (if needed)</span>
+    document.getElementById("reference").style.display = "block";
+  }
+      </code>
+    </pre>
+  <div class="text-box"> 
+  <h2>SSR</h2>
+  <pre>
+  As a fun little thing to end off with I made a typewriter with ssr.
+  On one of the first semesters my group and I talked about doing this for a project but it was before we actually had learned anything about JavaScript
+  Therefore we decided not to do it.
+  So I figured I could do it in this one for fun.
+  When you click start typewriter the button will desaprear and a text will be typed out from geeksforgeeks.
+  I was looking into getting them to start staggered but I couldn't get it to work as a wanted to so I scapped the idea.
+  </pre>
+
+
+<div id="typewriter">
+  <button onclick="startTypewriter(this)">Start Typewriter</button>
+  <p id="reference" style="display: none">
+    Reference: <a href="https://www.geeksforgeeks.org/node-js-server-side-rendering-ssr-using-ejs/" target="_blank">GeeksforGeeks</a>
+  </p>
+  <br>
+  <p id="line1"></p>
+  <p id="line2"></p>
+  <p id="line3"></p>
+  <p id="line4"></p>
+</div>
 
   </div>
 
-<h2>Server side rendering page</h2>
+</main>
+  
+  
+  
+
+</body>
+</html>

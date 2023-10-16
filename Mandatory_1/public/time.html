@@ -1,18 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="../style.css"/>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Code">
+
 </head>
+<body>
+  <header>
+        <!-- Navbar -->
+    <div class="topnav">
+      <a href="intro.html">Introduction</a>
+      <a href="firstServer.html">First Server</a>
+      <a href="serving.html">Serving HTML</a>
+      <a class="active" href="time.html">Time</a>
+      <a href="exportImport.html">Export / Import</a>
+      <a href="ssr.html">Server side rendering</a>
+    </div>
+  </header>
 
-<!-- Navbar -->
-<div class="topnav">
-    <a href="home.html">Home</a>
-    <a href="intro.html">Introduction</a>
-    <a href="firstServer.html">First Server</a>
-    <a href="serving.html">Serving HTML</a>
-    <a class="active" href="time.html">Time</a>
-    <a href="exportImport.html">Export / Import</a>
-    <a href="serverSide.html">Server side vs Client Side</a>
-    <a href="ssr.html">Server side rendering</a>
+  <main>
+    <div class="text-box">
 
-  </div>
 
-<h2>Time</h2>
+        
+
+ 
+      
+    <pre class="custom-code">
+      <code>    
+    Description:
+    This code demonstrates CRUD (Create, Read, Update, Delete) operations using Express.js.
+    It provides RESTful API endpoints for managing resources, including creating, reading,
+    updating, and deleting resources. Each operation corresponds to a specific HTTP method:
+    POST for creating, GET for reading, PUT for updating, and DELETE for deleting.
+  
+    <span class="comment">// Create: Define a POST route for creating new resources.</span>
+    app.post("/resource", (req, res) => {
+        // Handle resource creation logic.
+    });
+
+    <span class="comment">// Read: Define GET routes for reading resources.</span>
+    app.get("/resources", (req, res) => {
+        // Handle reading all resources.
+    });
+
+    <span class="comment">// Patch: Define a PATCH route for updating existing resources.</span>
+    app.patch("/resources/:id", (req, res) => {
+        // Handle updating a specific resource by ID.
+    });
+
+    <span class="comment">// Update: Define a PUT route for updating existing resources.</span>
+    app.put("/resources/:id", (req, res) => {
+        // Handle resource update logic.
+    });
+
+    <span class="comment">// Delete: Define a DELETE route for deleting resources.</span>
+    app.delete("/resources/:id", (req, res) => {
+        // Handle resource deletion logic.
+    });
+      <code>
+    </pre>
+  
+    
+      <h2>Time</h2>
+
+  <pre>
+  <strong>CRUDable REST API - Part II</strong>
+  In this part, we continue building a CRUDable REST API. 
+  This section likely covers additional HTTP methods such as POST, PUT, and DELETE to handle the create, 
+  update, and delete operations, respectively. It's about extending the API's capabilities.
+
+  <strong>Time</strong>
+  The "Time" topic might involve handling time-related operations in your code. 
+  Common use cases include scheduling tasks, tracking timestamps, and handling time zones. 
+  It's essential for applications with time-dependent functionality.
+
+  <strong>Fetch</strong>
+  The "Fetch" topic is related to making HTTP requests in JavaScript using the Fetch API. 
+  It includes sending HTTP requests, handling responses, and interacting with external resources. 
+  Fetch is essential for client-server communication.
+
+  <strong>Deployment</strong>
+  Deployment involves the process of making your application accessible to the public. 
+  It includes hosting your application on a web server, configuring domain names, and making your application available to users. 
+  Deployment is a crucial step in the software development lifecycle.
+  </pre>
+
+  <pre class="custom-code" style="float: left; width: 800px;">
+    <code>
+  Description:
+  This code snippet demonstrates how to work with date and time in JavaScript using the Date object. 
+  It showcases different methods to obtain information about the current date and time, 
+  including local time strings, UTC (Coordinated Universal Time) time, and epoch timestamps. 
+  Additionally, it retrieves and displays the current day of the week, 
+  providing a basic example of how to work with dates in JavaScript.
+  
+
+  <span class="comment">// Locale Time String</span>
+  console.log(Date());
+
+  <span class="comment">// UTC</span>
+  console.log(new Date());
+
+  <span class="comment">// Epoch timestamp / Unix</span>
+  console.log(Date.now());
+
+  <span class="comment">// Retrieve the current day of the week</span>
+  const weekdays = ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"];
+  console.log("Current day of the week:", weekdays[new Date().getDay()]);
+    </code>
+  </pre>
+  
+  <pre class="custom-code">
+    <code>
+  Description:
+  This code demonstrates the use of the fetch API to retrieve data from the PokeAPI. 
+  It fetches information about a random Pokemon and returns it as a response.
+  
+  <span class="comment">// Fetch data from the PokeAPI</span>
+  app.get("/battlepokemon", (req, res) => {
+      if (!currentPokemon || currentPokemon.strength <= 1) {
+          const randomPokemonId = randomIntFromInterval(1, 151);
+          fetch(`https://pokeapi.co/api/v2/pokemon/${randomPokemonId}`)
+          .then((response) => {
+              if (!response.ok) {
+                  throw new Error("Error getting a Pokemon");
+              }
+              return response.json();
+          })
+          .then((result) => {
+              const name = result.name.charAt(0).toUpperCase() + result.name.slice(1);
+              const imageURL = result.sprites.other.home.front_default;
+              const strength = randomIntFromInterval(1, 10);
+  
+              currentPokemon = {
+                  name, 
+                  imageURL,
+                  strength
+              };
+  
+              res.send({ data: currentPokemon });
+          });
+      }
+      else {
+          currentPokemon.strength--;
+          res.send({ data: currentPokemon });
+      }
+  });
+    </code>
+    </pre>
+    
+     
+    </div>
+  </main>
+  
+  
+  
+
+</body>
+</html>

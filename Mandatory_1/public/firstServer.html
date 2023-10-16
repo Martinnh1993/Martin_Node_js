@@ -1,18 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="../style.css"/>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css"/>
 </head>
+<body>
+  <header>
+        <!-- Navbar -->
+    <div class="topnav">
+      <a href="intro.html">Introduction</a>
+      <a class="active" href="firstServer.html">First Server</a>
+      <a href="serving.html">Serving HTML</a>
+      <a href="time.html">Time</a>
+      <a href="exportImport.html">Export / Import</a>
+      <a href="ssr.html">Server side rendering</a>
+    </div>
+  </header>
 
-<!-- Navbar -->
-<div class="topnav">
-    <a href="home.html">Home</a>
-    <a href="intro.html">Introduction</a>
-    <a class="active" href="firstServer.html">First Server</a>
-    <a href="serving.html">Serving HTML</a>
-    <a href="time.html">Time</a>
-    <a href="exportImport.html">Export / Import</a>
-    <a href="serverSide.html">Server side vs Client Side</a>
-    <a href="ssr.html">Server side rendering</a>
+  <main>
+    <div class="text-box">
+    <pre class="custom-code">
+      <code>
+      Description: 
+      Express.js is a web application framework for Node.js, 
+      designed for building web and API applications. 
+      It simplifies the process of creating robust and scalable server-side applications.
+  
+      <span class="comment">// Import the Express.js framework</span>
+      const express = require("express");
+  
+      <span class="comment">// Create an instance of the Express application</span>
+      const app = express();
+  
+      <span class="comment">// Enable parsing of JSON requests</span>
+      app.use(express.json());
 
-  </div>
+      <span class="comment">// Listen on port 8080 for incoming requests</span>
+      app.listen(8080);
+      </code>
+      </pre>
+      
+    
+      
+      <h2>First server</h2>
+      <img src="images/REST_API.png" alt="REST API">
+      
 
-<h2>First server</h2>
+
+      <pre class="custom-code">
+      <code>
+        
+      Description:
+      This section contains route handlers for various GET requests.
+      These handlers respond to different routes, 
+      providing JSON objects or processing query parameters based on the route.
+
+
+      <span class="comment">// Handle GET Requests for Different Routes</span>
+
+      <span class="comment">// Handle GET request for the root URL</span>
+      app.get("/", (req, res) => {
+        res.send({ data: "This is the first request handler" });
+      });
+
+      <span class="comment">// Handle GET request for "/dog" route</span>
+      app.get("/dog", (req, res) => {
+        console.log(req.params);
+        res.send({ dog: "Woof" });
+      });
+
+      <span class="comment">// Handle GET request for "/dog" route with two parameters</span>
+      app.get("/dog/:firstValue/:someOtherValue", (req, res) => {
+        console.log(req.params);
+        console.log(req.params.someOtherValue);
+        res.send({ dog: "Meow" });
+      });
+
+      <span class="comment">// Handle GET request for "/cat" route and display query parameters</span>
+      app.get("/cat", (req, res) => {
+        console.log(req.query);
+        res.send({ data: req.query });
+      });
+      </code>
+    </pre>
+
+   
+
+      <pre>
+  in preperation for this class we had to design an API of monkeys
+
+  <strong>Block Scope: </strong>
+  Variables declared with let or const are limited to the block (enclosed by {}) they are defined in. 
+  They are not accessible outside the block.
+
+  <strong>Function Scope: </strong>
+  Variables declared with var have function-level scope. 
+  They are accessible within the function in which they are defined.
+
+  <strong>const:</strong>
+  const is used to declare variables that should not be reassigned. It is not immutable, 
+  meaning you can change the internal properties of a const object.
+  const variables are stored in memory, just like other variables.
+  var is a globally scoped variable. It is accessible from anywhere in the code.
+
+  <strong>let:</strong>
+  let is block-scoped like const, but it can be initialized without a value and can be reassigned.
+  Unlike const, you can redeclare a variable using let in the same scope.
+
+  <strong>Hoisting:</strong>
+  Hoisting refers to the behavior in JavaScript where variable and function declarations are moved to the top of their containing 
+  function or global scope during compilation.
+  This allows you to use a function or variable before it's declared in your code.
+
+  <strong>Callback Function:</strong>
+  A callback function is a function that is passed as an argument to another function and is executed after the completion of that function.
+  It is often used to handle asynchronous operations in JavaScript, such as in event handling or making API calls.
+  
+  <strong>NPM Express:</strong>
+  Express is a web framework for Node.js. 
+  It simplifies building web applications and APIs by providing a set of features and middleware for handling common tasks, 
+  such as routing and serving content.
+
+  <strong>Semantic Versioning:</strong>
+  Semantic versioning (Semver) is a versioning scheme for software that aims to convey meaning about the underlying changes in a release.
+  It typically uses a version number in the format of MAJOR.MINOR.PATCH.
+  Learning Goals:
+
+  <strong>Clean Code: </strong>
+  Writing code that is easy to read, understand, and maintain.
+  ESLint Airbnb: Using ESLint with the Airbnb JavaScript style guide for consistent and clean code.
+
+  <strong>File Naming Convention:</strong>
+  Using app.js as the filename is a convention that many Node.js 
+  and Express developers follow to make it easy to locate the entry point of an application.
+
+  <strong>Data Format:</strong>
+  JSON (JavaScript Object Notation) is a versatile data format that is commonly used because it's easily understood by various programming languages, 
+  making it a great choice for exchanging data between systems and APIs.
+  Feel free to ask if you have more questions or need further explanations on any of these topics.
+      </pre>
+      
+      </div>
+
+  <pre class="custom-code" style="float: left;">
+    <code>
+      Description:
+      This callback function handles a GET request to the "/mountains/:id" 
+      route in an Express.js application.
+      It extracts the "id" path parameter from the URL, validates it, 
+      and responds with mountain data if a match is found.
+
+      <span class="comment">// Callback function for handling GET request to "/mountains/:id"</span>
+
+      app.get("/mountains/:id", (req, res) => {
+        <span class="comment">// Extract the "id" from the URL path parameters</span>
+        const pathVariableMountainId = Number(req.params.id);
+        if (!pathVariableMountainId) {
+          <span class="comment">// If "id" is not a valid number, send a 404 response with an error message</span>
+          res.status(404).send({ error: "The mountain id must be a number" });
+        } else {
+          <span class="comment">// Search for a mountain with the specified "id" in the "mountains" array</span>
+          const foundMountain = mountains.find((mountain) => 
+          mountain.id === pathVariableMountainId);
+      
+        if (foundMountain) {
+          <span class="comment">// If a mountain is found, send a response with the mountain data</span>
+            res.send({ data: foundMountain });
+        } else {
+          <span class="comment"></span>
+          res.status(404).send({ error: "Mountain not found" });
+        }
+      }
+      });
+    </code>
+  </pre>
+
+      
+  </main>
+
+</body>
+</html>
