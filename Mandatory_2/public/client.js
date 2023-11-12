@@ -1,23 +1,32 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
+// Initialize Firebase client SDK
+const firebaseConfig = {
+  apiKey: "AIzaSyC0QCCggQhCeUDUFgcQOMcFB7_2wYqd20A",
+  authDomain: "nodejsmandatory2.firebaseapp.com",
+  projectId: "nodejsmandatory2",
+  storageBucket: "nodejsmandatory2.appspot.com",
+  messagingSenderId: "237598395479",
+  appId: "1:237598395479:web:d4b2e838176607d2d6a712"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
+const collectionRef = collection(db, 'books');
+const q = query(collectionRef, orderBy('createdAt'));
   
-  // Initialize Firebase client SDK
-  const firebaseConfig = {
-    apiKey: "AIzaSyC0QCCggQhCeUDUFgcQOMcFB7_2wYqd20A",
-    authDomain: "nodejsmandatory2.firebaseapp.com",
-    projectId: "nodejsmandatory2",
-    storageBucket: "nodejsmandatory2.appspot.com",
-    messagingSenderId: "237598395479",
-    appId: "1:237598395479:web:d4b2e838176607d2d6a712"
-  };
-  
-  const firebaseApp = initializeApp(firebaseConfig);
-  const db = getFirestore(firebaseApp);
-  const auth = getAuth(firebaseApp);
-  const collectionRef = collection(db, 'books');
-  const q = query(collectionRef, orderBy('createdAt'));
-  
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // Redirect to the main content page after successful login
+      window.location.href = '/home';
+    } else {
+      // Stay on the loginSignup.html page if not authenticated
+    }
+  });
+
   // Function to render books
   function renderBooks(doc) {
     let li = document.createElement('li');
@@ -72,13 +81,6 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
     });
   });
   
-  // Authentication State Listener
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, show the main page or user-specific content
-    } else {
-      // No user is signed in, redirect to login page or show login form
-      window.location.replace('/loginSignup.html');
-    }
-  });
+
+
   

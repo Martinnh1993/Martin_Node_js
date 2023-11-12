@@ -16,6 +16,8 @@ admin.initializeApp({
 const app = express();
 const port = process.env.PORT || 3000;
 
+
+
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
@@ -34,8 +36,13 @@ const checkAuth = async (req, res, next) => {
   }
 };
 
-// Main route that requires the user to be authenticated
-app.get('/', checkAuth, (req, res) => {
+// Main route serves the login/signup page by default
+app.get('/', (req, res) => {
+  res.sendFile(join(dirname(fileURLToPath(import.meta.url)), 'public', 'loginSignup.html'));
+});
+
+// Protected route for authenticated users to access the main content
+app.get('/home', checkAuth, (req, res) => {
   res.sendFile(join(dirname(fileURLToPath(import.meta.url)), 'public', 'index.html'));
 });
 
