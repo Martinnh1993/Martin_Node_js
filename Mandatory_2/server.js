@@ -4,6 +4,7 @@ import { dirname, join } from 'path';
 import admin from 'firebase-admin';
 import bodyParser from 'body-parser';
 import { readFileSync } from 'fs';
+import session from 'express-session';
 
 
 const keyPath = join(process.cwd(), 'adminKey.json');
@@ -14,27 +15,33 @@ admin.initializeApp({
 });
 
 const app = express();
-const port = process.env.PORT || 3000;
-
-
+const port = process.env.PORT || 8080;
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
 // Serve static files from the "public" directory
 app.use(express.static(join(dirname(fileURLToPath(import.meta.url)), 'public')));
-
-// Middleware to protect routes
+ 
 const checkAuth = async (req, res, next) => {
-  const token = req.headers.authorization?.split('Bearer ')[1];
-  try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    req.user = decodedToken;
+  // Check for a session or cookie instead of a token
+  if (req.session.uid) {
     next();
-  } catch (error) {
+  } else {
     res.status(401).send('You are not authorized');
   }
 };
+app.use(session({
+  secret: 'your_secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // or a similar check
+    httpOnly: true
+  }
+}));
+
+app.use('/home', checkAuth); // Make sure this comes after the session middleware
 
 // Main route serves the login/signup page by default
 app.get('/', (req, res) => {
@@ -61,6 +68,23 @@ app.post('/addBook', checkAuth, async (req, res) => {
     res.status(400).send('Error adding book');
   }
 });
+
+
+app.post('/sessionLogin', (req, res) => {
+  // ... verify ID token ...
+  req.session.uid = decodedToken.uid; // Set the UID in the session
+  req.session.save(err => { // Make sure to save the session
+    if (err) {
+      return res.status(500).send('Could not save session');
+    }
+    res.status(200).send({ status: 'success', uid: decodedToken.uid });
+  });
+});
+
+
+
+
+
 
 // Start the server
 app.listen(port, () => {

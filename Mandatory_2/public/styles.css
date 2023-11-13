@@ -100,3 +100,9 @@ button{
     letter-spacing: 1px;
     color: #999;
 }
+
+#forms-container {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+}
