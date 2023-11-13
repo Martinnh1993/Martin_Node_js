@@ -7,18 +7,19 @@
 </head>
 <body>
     <div class="content-div">
-    <h2>Mandatory 2 Note JS</h2>
+    
 
     <div class="content">
-        <form class="add">
+        <h2>Book collection</h2>
+        <form id="addBook-form">
             <input type="text" name="title" required placeholder="Title">
             <input type="text" name="author" required placeholder="Author">
 
-            <button>Add a new book</button>
+            <button type="button" onclick="window.addBook(event)">Add Book</button>
         </form>
         <ul id="book-list"></ul>
         
-        <button class="logout">Logout</button>
+        <button onclick="window.logout(event)">Logout</button>
         </div>
 
         

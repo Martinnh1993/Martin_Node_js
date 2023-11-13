@@ -7,34 +7,53 @@
     <title>LoginSignup</title>
 </head>
 <body>
-    <div id="forms-container">
+    <div id="forms-container" class="content">
         <!-- <h2>Login</h2> -->
-        <form id="login-form" class="auth-form">
-            <label for="email">email:</label>
-            <input type="email" name="email">
-            
-            <label for="password">password:</label>
-            <input type="password" name="password">
+        <form id="login-form" class="form">
+            <h2>Login</h2>
+            <input type="email" name="email" placeholder="E-mail">
+            <input type="password" name="password" placeholder="Password">
 
-            <div class="buttons">
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="button-container">
+                <button type="button" onclick="toggleForms('signup')">Don't have an account? Sign up</button>
                 <button onclick="window.login(event)">Login</button>
-                <button type="button" id="show-signup">Don't have an account? Sign up</button>
+                <button type="button" onclick="toggleForms('forgotPassword')">Forgot Password?</button>
             </div>
         </form>
 
         <!-- <h2>Signup</h2> -->
-        <form id="signup-form" class="auth-form" style="display: none;">
-            <label for="email">email:</label>
-            <input type="email" name="email">
-            
-            <label for="password">password:</label>
-            <input type="password" name="password">
+        <form id="signup-form" class="form" style="display: none;">
+            <h2>Signup</h2>
+            <input type="email" name="email" placeholder="E-mail">
+            <input type="password" name="password" placeholder="Password">
 
-            <div class="buttons">
-                <button type="submit">signup</button>
-                <button type="button" id="show-login">Have an account? Log in</button>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="button-container">
+                <button type="button" onclick="toggleForms('login')">Have an account? Log in</button>
+                <button type="button" onclick="window.signup(event)">Sign Up</button>
             </div>
         </form>
+
+        <form id="forgot-password-form" style="display: none;">
+            <h2>Forgot Password</h2>
+            <input type="email" id="forgot-password-email" placeholder="Enter your email" required>
+
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="button-container">
+                <button type="button" onclick="sendPasswordResetEmail(event)">Reset password</button>
+                <button type="button" onclick="toggleForms('login')">Back to Login</button>
+            </div>
+          </form>
     </div>
 
     <script type="module" src="./client.js"></script>

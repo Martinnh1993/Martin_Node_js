@@ -5,7 +5,7 @@ import admin from 'firebase-admin';
 import bodyParser from 'body-parser';
 import { readFileSync } from 'fs';
 import session from 'express-session';
-
+import nodemailer from 'nodemailer'
 
 const keyPath = join(process.cwd(), 'adminKey.json');
 const serviceAccount = JSON.parse(readFileSync(keyPath, 'utf8'));
@@ -36,10 +36,11 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // or a similar check
+    secure: false, // should be true in production when using HTTPS
     httpOnly: true
   }
 }));
+
 
 app.use('/home', checkAuth); // Make sure this comes after the session middleware
 
@@ -71,20 +72,98 @@ app.post('/addBook', checkAuth, async (req, res) => {
 
 
 app.post('/sessionLogin', (req, res) => {
-  // ... verify ID token ...
-  req.session.uid = decodedToken.uid; // Set the UID in the session
-  req.session.save(err => { // Make sure to save the session
+  const idToken = req.header('Authorization').split('Bearer ')[1];
+
+  admin.auth().verifyIdToken(idToken)
+    .then((decodedToken) => {
+      // Set the UID in the session
+      req.session.uid = decodedToken.uid;
+
+      // Save the session
+      req.session.save(err => {
+        if (err) {
+          // If there's an error saving the session, send an error response
+          return res.status(500).send('Could not save session');
+        }
+        // If the session is saved successfully, send a success response
+        res.status(200).send({ status: 'success', uid: decodedToken.uid });
+      });
+    })
+    .catch(error => {
+      // If token verification fails, send an unauthorized response
+      res.status(401).send('You are not authorized');
+    });
+});
+
+app.post('/sessionLogout', (req, res) => {
+  req.session.destroy((err) => {
     if (err) {
-      return res.status(500).send('Could not save session');
+      res.status(500).send('Could not log out');
+    } else {
+      // The response must be handled by the client to ensure a proper redirect
+      res.status(200).send('Logged out successfully');
     }
-    res.status(200).send({ status: 'success', uid: decodedToken.uid });
   });
 });
 
+// Endpoint to handle post-signup logic
+app.post('/signup', (req, res) => {
+  // Extract user details from the request body
+  const { email, password } = req.body;
+
+  admin.auth().createUser({
+    email: email,
+    password: password
+  })
+  .then(userRecord => {
+    // User created successfully in Firebase Auth
+    // Now perform any server-side setup, like creating a user profile in your database
+    // ...
+    res.status(200).send({ uid: userRecord.uid });
+  })
+  .catch(error => {
+    // Handle signup errors
+    res.status(500).send(error.message);
+  });
+});
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp-mail.outlook.com',
+  port: 587, 
+  secure: false, // Note that secure is set to false since port 587 is typically used with STARTTLS
+  auth: {
+    user: 'DevDummy@outlook.dk', 
+    pass: 'Dummy1234' 
+  },
+});
 
 
+app.post('/forgot-password', (req, res) => {
+  const { email } = req.body;
+  console.log("server.js L 143");
 
+  admin.auth().generatePasswordResetLink(email, {
+    // Additional settings can go here, such as redirect URL after reset
+  })
+  .then((resetLink) => {
+    const mailOptions = {
+      from: 'DevDummy@outlook.dk', // Your Outlook email
+      to: email,
+      subject: 'Password Reset',
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
+    };
 
+    return transporter.sendMail(mailOptions);
+  })
+  .then(() => {
+    res.send('Password reset email sent.');
+  })
+  .catch((error) => {
+    console.error("Error sending password reset email:", error);
+    // Send a JSON response with the error message
+    res.status(500).json({ error: 'Error sending password reset email.' });
+  });  
+});
 
 // Start the server
 app.listen(port, () => {
