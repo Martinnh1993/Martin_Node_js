@@ -185,42 +185,43 @@ const q = query(booksCollectionRef);
   };
 
   //signup function
-  window.signup = function(event) {
-    event.preventDefault();
-    
-    const signupForm = document.getElementById('signup-form')
-    const email = signupForm.email.value;
-    const password = signupForm.password.value;
+window.signup = function(event) {
+  event.preventDefault();
   
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // User is signed up, now get the ID token
-        return userCredential.user.getIdToken();
-      })
-      .then((idToken) => {
-        // Send the ID token to the server to establish a session
-        return fetch('/sessionLogin', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`
-          },
-          credentials: 'include' // Necessary for cookies to be sent
-        });
-      })
-      .then((response) => {
-        if (response.ok) {
-          // The session is established, redirect to the home page
-          window.location.href = '/home';
-        } else {
-          throw new Error('Could not establish session after signup');
-        }
-      })
-      .catch((error) => {
-        // Handle errors, such as showing a message to the user
-        console.error("Error during signup or session establishment:", error);
+  const signupForm = document.getElementById('signup-form')
+  const email = signupForm.email.value;
+  const password = signupForm.password.value;
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // User is signed up, now get the ID token
+      return userCredential.user.getIdToken();
+    })
+    .then((idToken) => {
+      // Send the ID token to the server to establish a session and send welcome email
+      return fetch('/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ email: email }) // Include email in the request body for the welcome email
       });
-  };
+    })
+    .then((response) => {
+      if (response.ok) {
+        // The session is established, and the welcome email is sent, redirect to the home page
+        window.location.href = '/home';
+      } else {
+        throw new Error('Could not establish session or send welcome email after signup');
+      }
+    })
+    .catch((error) => {
+      // Handle errors, such as showing a message to the user
+      console.error("Error during signup or session establishment:", error);
+    });
+};
+
 
   //logout function
   window.logout = function(event) {
@@ -234,36 +235,7 @@ const q = query(booksCollectionRef);
     });
   };
 
-  window.sendPasswordResetEmail = function(event) {
-    event.preventDefault();
-    const email = document.getElementById('forgot-password-email').value;
-
-    fetch('/forgot-password', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email: email })
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json(); // Only parse as JSON if response is ok
-      } else {
-        throw new Error('Server responded with an error.');
-      }
-    })
-    .then(data => {
-      if (data.message) {
-        alert(data.message); // Alert the message from the server
-      } else {
-        alert('Password reset email sent.'); // Or a default success message
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Failed to send reset email. Please try again.');
-    });
-  };
+  
   
   
   

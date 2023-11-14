@@ -20,6 +20,22 @@ const port = process.env.PORT || 8080;
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
+const transporter = nodemailer.createTransport({
+  host: 'smtp-mail.outlook.com',
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: 'DevDummy@outlook.dk',
+    pass: 'etwurlfvdrwhdyvh'
+  },
+  tls: {
+    // It's okay to use this for local development, but remove it for production
+    rejectUnauthorized: false
+  }
+});
+
+
+
 // Serve static files from the "public" directory
 app.use(express.static(join(dirname(fileURLToPath(import.meta.url)), 'public')));
  
@@ -106,64 +122,32 @@ app.post('/sessionLogout', (req, res) => {
   });
 });
 
-// Endpoint to handle post-signup logic
+// signup endpoint
 app.post('/signup', (req, res) => {
-  // Extract user details from the request body
-  const { email, password } = req.body;
-
-  admin.auth().createUser({
-    email: email,
-    password: password
-  })
-  .then(userRecord => {
-    // User created successfully in Firebase Auth
-    // Now perform any server-side setup, like creating a user profile in your database
-    // ...
-    res.status(200).send({ uid: userRecord.uid });
-  })
-  .catch(error => {
-    // Handle signup errors
-    res.status(500).send(error.message);
-  });
-});
-
-const transporter = nodemailer.createTransport({
-  host: 'smtp-mail.outlook.com',
-  port: 587, 
-  secure: false, // Note that secure is set to false since port 587 is typically used with STARTTLS
-  auth: {
-    user: 'DevDummy@outlook.dk', 
-    pass: 'Dummy1234' 
-  },
-});
-
-
-app.post('/forgot-password', (req, res) => {
   const { email } = req.body;
-  console.log("server.js L 143");
 
-  admin.auth().generatePasswordResetLink(email, {
-    // Additional settings can go here, such as redirect URL after reset
-  })
-  .then((resetLink) => {
-    const mailOptions = {
-      from: 'DevDummy@outlook.dk', // Your Outlook email
-      to: email,
-      subject: 'Password Reset',
-      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
-    };
-
-    return transporter.sendMail(mailOptions);
-  })
-  .then(() => {
-    res.send('Password reset email sent.');
-  })
-  .catch((error) => {
-    console.error("Error sending password reset email:", error);
-    // Send a JSON response with the error message
-    res.status(500).json({ error: 'Error sending password reset email.' });
-  });  
+  sendWelcomeEmail(email)
+    .then((info) => {
+      console.log('Email sent:', info);
+      res.status(200).send({ message: 'Welcome email sent.' });
+    })
+    .catch(error => {
+      console.error("Error sending welcome email:", error);
+      res.status(500).json({ error: error.message });
+    });
 });
+
+function sendWelcomeEmail(email) {
+  const mailOptions = {
+    from: 'DevDummy@outlook.dk',
+    to: email,
+    subject: 'Welcome to the App!',
+    html: `<h1>Welcome</h1><p>Congratulations ${email}, you have successfully signed up for my app.</p>`
+  };
+
+  // Return the promise from transporter.sendMail
+  return transporter.sendMail(mailOptions);
+}
 
 // Start the server
 app.listen(port, () => {
