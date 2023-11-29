@@ -15,6 +15,8 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 
+
+
 const db = getFirestore();
 const booksCollectionRef = collection(db, 'books'); // Use your actual collection name
 const q = query(booksCollectionRef);
@@ -127,6 +129,7 @@ const q = query(booksCollectionRef);
 
   window.addBook = function(event) {
     event.preventDefault(); // Corrected the method call with parentheses
+    
     const addBookForm = document.getElementById('addBook-form');
     if (addBookForm) { // Check if the form exists
       const title = addBookForm['title'].value;
@@ -140,6 +143,7 @@ const q = query(booksCollectionRef);
       }).then(() => {
         // Clear the form after adding the book
         addBookForm.reset();
+        /* showToast(successMsg); */
       }).catch((error) => {
         // Handle errors here
         console.error("Error adding document: ", error);
@@ -163,6 +167,8 @@ const q = query(booksCollectionRef);
   window.login = function(event) {
     event.preventDefault();
     
+    let toastBox = document.getElementById('toastBox');
+    let invalidMsg = '<i class="fa-solid fa-circle-exclamation"></i> Invalid password or mail';
     const loginForm = document.getElementById("login-form");
     const email = loginForm.email.value;
     const password = loginForm.password.value;
@@ -181,13 +187,14 @@ const q = query(booksCollectionRef);
         const errorCode = error.code;
         const errorMessage = error.message;
         console.error("Authentication failed:", errorCode, errorMessage);
+        showToast(invalidMsg);
       });
   };
 
   //signup function
 window.signup = function(event) {
   event.preventDefault();
-  
+    
   const signupForm = document.getElementById('signup-form')
   const email = signupForm.email.value;
   const password = signupForm.password.value;
@@ -234,6 +241,21 @@ window.signup = function(event) {
       console.error('Sign out error', error);
     });
   };
+
+  function showToast(msg) {
+    let toast = document.createElement('div');
+    toast.classList.add('toast');
+    toast.innerHTML = msg;
+    toastBox.appendChild(toast);
+
+    if (msg.includes('Invalid')) {
+        toast.classList.add('invalid');
+    }
+
+    setTimeout(() => {
+        toast.remove();
+    }, 6000);
+  }
 
   
   
