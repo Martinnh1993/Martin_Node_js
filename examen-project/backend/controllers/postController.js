@@ -59,69 +59,110 @@ exports.showSinglePost = async (req, res, next) => {
     }
 }
 
+
 // delete post
 exports.deletePost = async (req, res, next) => {
-    const currentPost = await Post.findById(req.params.id)
-
-    // delete post image in cloudinary 
-    const imgId = currentPost.image.public_id
-    if (imgId) {
-        await cloudinary.uploader.destroy(imgId)
-    }
-
     try {
-        const post = await Post.findByIdAndRemove(req.params.id)
+        // Check if post exists first
+        const currentPost = await Post.findById(req.params.id);
+        if (!currentPost) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+
+        // delete post image in cloudinary 
+        const imgId = currentPost.image.public_id;
+        if (imgId) {
+            await cloudinary.uploader.destroy(imgId);
+        }
+
+        // Delete the post using deleteOne
+        await Post.deleteOne({ _id: req.params.id });
         res.status(200).json({
             success: true,
-            message: "post deleted"
-        })
+            message: "Post deleted"
+        });
     } catch (error) {
-        next(error)
+        console.log("Error:", error);
+        next(error);
     }
-}
+};
+
+
+
 
 // update post
 exports.updatePost = async (req, res, next) => {
     try {
-        const {title, content, image } = req.body
-        const currentPost = await Post.findById(req.params.id)
+        const { title, content, image } = req.body;
+        const currentPost = await Post.findById(req.params.id);
+
+        if (!currentPost) {
+            return res.status(404).json({ success: false, message: "Post not found" });
+        }
 
         // build the object data
         const data = {
             title: title || currentPost.title,
             content: content || currentPost.content,
-            image: image || currentPost.image
-        }
+            image: currentPost.image // Keep the old image by default
+        };
+
+        // Function to check if string is base64
+        const isBase64String = (str) => {
+            if (str === '' || str.trim() === '') { return false; }
+            try {
+                return btoa(atob(str)) === str;
+            } catch (err) {
+                return false;
+            }
+        };
 
         // modify post image conditionally 
-        if (req.body.image !== '') {
-            const imgId = currentPost.image.public_id
+        if (image && image !== '') {
+            const imgId = currentPost.image.public_id;
             if (imgId) {
-                await cloudinary.uploader.destroy(imgId)
+                await cloudinary.uploader.destroy(imgId);
             }
 
-            const newImage = await cloudinary.uploader.upload(req.body.image, {
-                folder: 'posts',
-                width: 1200, 
-                crop: 'scale'
-            })
+            let newImage = null;
 
-            data.image = {
-                public_id: newImage.public_id,
-                url: newImage.secure_url
+            // Check if image is a base64 string
+            if (isBase64String(image)) {
+                newImage = await cloudinary.uploader.upload(image, {
+                    folder: 'posts',
+                    width: 1200, 
+                    crop: 'scale'
+                });
+            }
+            // If it's not a base64 string, handle as URL or other type
+            else {
+                // Handle URL-based image upload or other types here
+                // For now, we'll skip uploading if it's not a base64 string
             }
 
-            const postUpdate = await Post.findByIdAndUpdate(req.params.id, data, { new: true })
-
-            res.status(200).json({
-                success: true, 
-                postUpdate
-            })
+            if (newImage) {
+                data.image = {
+                    public_id: newImage.public_id,
+                    url: newImage.secure_url
+                };
+            }
         }
+
+        const postUpdate = await Post.findByIdAndUpdate(req.params.id, data, { new: true });
+
+        res.status(200).json({
+            success: true, 
+            postUpdate
+        });
     } catch (error) {
-        next(error)
+        console.error(error);
+        next(error);
     }
-}
+};
+
 
 // add comment
 exports.addComment = async (req, res, next) => {

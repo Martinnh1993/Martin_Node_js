@@ -1,0 +1,316 @@
+/* Navbar */
+.topnav {
+    background-color: #1e1e1e;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding:  16px;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  /* Add a color to the active/current link */
+  .topnav a.active {
+    background-color: white;
+    color: #1e1e1e;
+  }
+
+  .topnav i {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 18px;
+  }
+
+  #login-logout-icon i {
+    font-size: 20px; /* or any size that fits well in your navbar */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #fff;
+    margin: 0
+}
+
+/* form for signin and signup */
+.formDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+  
+}
+
+.signupLoginForm {
+    background-color: #1e1e1e; 
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 450px;
+    
+}
+
+.signupLoginForm h2 {
+    margin-bottom: 30px;
+    font-size: 1.5em;
+}
+
+.signupLoginForm label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #fff;
+}
+
+.signupLoginForm input {
+    display: block;
+    width: calc(100% - 20px);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #333;
+    background-color: #2a2a2a;
+    color: #fff; 
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+button {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333; 
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+
+.buttonContainer button:hover {
+    background-color: #555;
+}
+
+
+/* post html styling */
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto 50px;
+    padding-top: 15px;
+}
+
+.post-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.post-item .post-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.post-item .post-title,
+.post-item .post-content {
+    flex-grow: 1;
+}
+
+.delete-post-btn {
+    background-color: #590f0f;
+}
+
+#postsList {
+    list-style-type: none; /* Removes the default list bullet points */
+    padding: 0;
+}
+
+#postsList li {
+    margin-bottom: 10px; /* Spacing between posts */
+    padding: 10px;
+    background-color: #444; /* Slightly different shade for the list items */
+    border-radius: 5px; /* Optional, for rounded corners on list items */
+}
+
+/* create post styles */
+.createPostContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+#createPostForm {
+    background-color: #1e1e1e; 
+    padding: 30px;
+    border-radius: 5px;
+    width: 500px;    
+}
+
+#createPostForm input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+
+}
+
+#createPostForm textarea {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.drop-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .drop-area p {
+    margin: 0;
+  }
+
+.previewImage {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+
+/* post styles */
+.container {
+    display: flex;
+    max-width: 100%; 
+    margin-top: 20px;
+}
+
+#postContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+   
+}
+
+.post-card {
+    background-color: #1e1e1e;
+    color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    width: 300px; /* You can adjust this width */
+    margin: 5px 0;
+}
+
+.post-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    max-height: 200px;
+}
+
+.post-card .interactions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-card .fa-heart, .post-card .fa-message {
+    margin-right: 10px; 
+    cursor: pointer; 
+}
+
+
+
+/* toast */
+#toastBox {
+    position: fixed;
+
+}
+
+.toast {
+    width: 400px;
+    height: 80px;
+    background-color: #333;
+    font-weight: 500;
+    margin: 15px 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    position: relative;
+    transform: translateX(100%);
+    animation: moveleft 0.5s linear forwards;
+}
+@keyframes moveleft {
+    100%{
+        transform: translateX(0);
+    }
+}
+.toast i {
+    margin: 0 20px;
+    font-size: 35px;
+    color: green;
+}
+.toast.invalid i {
+    color: orange;
+}
+.toast::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 5px;
+    background-color: green;
+    animation: anim 5s linear forwards;
+}
+@keyframes anim {
+    100% {
+        width: 0;
+    }
+}
+.toast.invalid::after {
+    background-color: orange;
+}
+
+
+/* about page */
+.lorem {
+    margin: auto 50px;
+    font-size: 20px;
+}
+
+.lorem p {
+    padding-top: 10px;
+}

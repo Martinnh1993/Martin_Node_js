@@ -1,0 +1,52 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/f42273f0ca.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Login/Signup</title>
+</head>
+<body>
+
+    <div id="toastBox"></div>
+
+    <div class="formDiv">
+        <div class="signupLoginForm" id="loginForm">
+            <h2>Login</h2>
+            <label for="loginEmail">Email</label>
+            <input type="text" id="loginEmail" placeholder="Email">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Password">
+
+            <div class="buttonContainer">
+                <button onClick="signin()">Login</button>
+                <button onClick="showSignupForm()">Don't have account? Signup</button>
+            </div>
+        </div>
+
+        <div class="signupLoginForm" id="signupForm" style="display: none;">
+            <h2>Signup</h2>
+            <label for="signupName">Name</label>
+            <input type="text" id="signupName" placeholder="Name">
+            <label for="signupEmail">Email</label>
+            <input type="text" id="signupEmail" placeholder="Email">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" placeholder="Password">
+
+            <div class="buttonContainer">
+                <button onClick="signup()">Signup</button>
+                <button onClick="showLoginForm()">Already have account? Login</button>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <script src="http://localhost:9000/socket.io/socket.io.js"></script>
+    <script src="../src/auth.js"></script>
+    <script src="../src/api.js"></script>
+    <script src="../src/main.js"></script>
+    <script src="../src/utils.js"></script>
+
+</body>
+</html>
