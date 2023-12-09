@@ -4,6 +4,7 @@
     overflow: hidden;
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
   
   /* Style the links inside the navigation bar */
@@ -32,7 +33,6 @@
     float: left;
     color: #f2f2f2;
     text-align: center;
-    padding: 14px 16px;
     text-decoration: none;
     font-size: 18px;
   }
@@ -45,7 +45,8 @@ body {
     font-family: Arial, sans-serif;
     background-color: #121212;
     color: #fff;
-    margin: 0
+    margin: 0;
+    position: relative;
 }
 
 /* form for signin and signup */
@@ -118,6 +119,52 @@ button {
     background-color: #555;
 }
 
+/* home page styles */
+.container {
+    max-width: 100%; 
+    margin-top: 20px;
+}
+
+#postContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+   
+}
+
+.post-card {
+    background-color: #1e1e1e;
+    color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    width: 300px; /* Adjust the width as needed */
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* This will push the interactions to the bottom */
+    height: 100%; /* Set a specific height if needed to make sure there is space for interactions */
+}
+
+.post-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    max-height: 200px;
+}
+
+.post-card .interactions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-card .fa-heart{
+    margin-right: 10px; 
+    cursor: pointer; 
+}
+
 
 /* post html styling */
 .posts-container {
@@ -150,15 +197,17 @@ button {
 }
 
 #postsList {
-    list-style-type: none; /* Removes the default list bullet points */
+    list-style-type: none; 
     padding: 0;
 }
 
 #postsList li {
-    margin-bottom: 10px; /* Spacing between posts */
+    margin-bottom: 10px; 
     padding: 10px;
-    background-color: #444; /* Slightly different shade for the list items */
-    border-radius: 5px; /* Optional, for rounded corners on list items */
+    background-color: #444;
+    border-radius: 5px; 
+    height: 100px;
+    overflow: hidden;
 }
 
 /* create post styles */
@@ -207,76 +256,117 @@ button {
     border-radius: 10px;
 }
 
+/* single post */
+.postWithId {
+    width: 70%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #2a2a2a;
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    overflow: auto; /* Adjust as needed */
+}
 
-/* post styles */
-.container {
+.postWithId img {
+    display: block;
+    max-width: 80%;
+    height: auto; 
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+
+.postWithId h1, .postWithId p {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Comment form */
+.comment-form {
     display: flex;
-    max-width: 100%; 
+    flex-direction: column;
     margin-top: 20px;
 }
 
-#postContainer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-   
-}
-
-.post-card {
-    background-color: #1e1e1e;
-    color: #fff;
-    border-radius: 10px;
-    padding: 15px;
-    width: 300px; /* You can adjust this width */
-    margin: 5px 0;
-}
-
-.post-card img {
-    width: 100%;
-    height: auto;
+.comment-form textarea {
+    width: 100%; /* Full width for textarea */
+    padding: 10px;
+    margin-bottom: 10px;
     border-radius: 5px;
-    max-height: 200px;
+    border: none;
+    resize: none;
+    background-color: #555; /* Dark background for contrast */
+    color: #fff; /* Light text for readability */
 }
 
-.post-card .interactions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.comment-form button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px;
 }
 
-.post-card .fa-heart, .post-card .fa-message {
-    margin-right: 10px; 
-    cursor: pointer; 
+/* Comments section */
+.commentContainer {
+    width: 70%;
+    margin-bottom: 10px; /* Space between comments */
+    clear: both; /* Clear floats */
 }
 
+.comment {
+    background-color: #444; /* Dark background for the comment */
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff; /* Light color for the comment text */
+}
+
+.postedBy {
+    font-size: 0.8em;
+    color: lightgray; /* Subtle color for the metadata */
+    margin-top: 5px; /* Small space between the comment text and metadata */
+}
+
+.current-user-commentContainer {
+    float: right; /* Aligns the current user's comment container to the right */
+}
 
 
 /* toast */
 #toastBox {
     position: fixed;
-
+    top: 90px; /* Distance from the top */
+    right: 20px; /* Distance from the right */
+    z-index: 1050; /* Higher z-index for visibility */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 .toast {
-    width: 400px;
+    width: 400px; /* Fixed width for each toast */
     height: 80px;
     background-color: #333;
+    color: #fff; /* Ensure text is visible */
     font-weight: 500;
-    margin: 15px 0;
+    margin-bottom: 15px; /* Space between toasts */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     position: relative;
-    transform: translateX(100%);
-    animation: moveleft 0.5s linear forwards;
+    transform: translateX(100%); /* Start off-screen to the right */
+    animation: slideIn 0.5s linear forwards;
 }
-@keyframes moveleft {
-    100%{
+
+@keyframes slideIn {
+    100% {
         transform: translateX(0);
     }
 }
+
 .toast i {
     margin: 0 20px;
     font-size: 35px;

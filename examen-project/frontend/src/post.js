@@ -1,332 +1,190 @@
-function createNewPostForm() {
-    const userInfoJson = localStorage.getItem('userInfo');
-    if (userInfoJson) {
-        const userInfo = JSON.parse(userInfoJson);
-        console.log(userInfo);
+document.addEventListener('DOMContentLoaded', function () {
+    // Extract the post ID from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('id');
 
-        // Check if the user is authenticated and is an admin
-        if (userInfo.role === 'admin') {
-            window.location.href = 'createPost.html';
-        } else {
-            alert('Only admin users can create posts.');
-            // Optionally redirect to a different page or show an error message
-        }
+    if (postId) {
+        fetchPostData(postId);
     } else {
-        alert('You must be logged in to create posts.');
-        // Redirect to login page or show an error message
+        showToast('No post ID provided.', 'error');
+    }
+
+    // Socket.IO integration
+    const socket = io('http://localhost:9000'); // Adjust URL as necessary
+
+    socket.on('postChange', (change) => {
+        if ((change.operationType === 'insert' || change.operationType === 'update') && change.documentKey._id === postId) {
+            fetchPostData(postId);
+        }
+    });
+});
+
+function fetchPostData(postId) {
+    console.log('Fetching post with ID:', postId);
+    fetch(`http://localhost:9000/api/post/${postId}`)
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    showToast('Post not found', 'error');
+                } else {
+                    showToast('Failed to fetch post', 'error');
+                }
+                throw new Error('Failed to fetch post');
+            }
+            return response.json();
+        })
+        .then(post => {
+            console.log('Fetched post data:', post);
+            displayPost(post);
+        })
+        .catch(error => {
+            console.log('Error fetching post:', error);
+            showToast(`Error: ${error.message}`, 'error');
+        });
+}
+
+
+function displayPost(data) {
+    const postContainer = document.querySelector('.postWithId');
+    const currentUserID = JSON.parse(localStorage.getItem('userInfo'))?.id;
+
+    // Clear previous content
+    postContainer.innerHTML = '';
+
+    if (data.success && data.posts) {
+        const post = data.posts;
+
+        // Create and append title element
+        const title = document.createElement('h1');
+        title.textContent = post.title;
+        postContainer.appendChild(title);
+
+        // Create and append image element, if available
+        if (post.image && post.image.url) {
+            const image = document.createElement('img');
+            image.src = post.image.url;
+            image.alt = 'Post Image';
+            image.classList.add('postImage');
+            postContainer.appendChild(image);
+        }
+
+        // Create and append content element
+        const content = document.createElement('p');
+        content.textContent = post.content;
+        postContainer.appendChild(content);
+
+        // Create and append comment form
+        const commentForm = document.createElement('form');
+        commentForm.className = 'comment-form';
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitComment(post._id);
+        });
+
+        const textarea = document.createElement('textarea');
+        textarea.placeholder = 'Add a comment...';
+        textarea.required = true;
+        commentForm.appendChild(textarea);
+
+        const submitButton = document.createElement('button');
+        submitButton.type = 'submit';
+        submitButton.textContent = 'Post Comment';
+        commentForm.appendChild(submitButton);
+
+        postContainer.appendChild(commentForm);
+
+        // Create and append comments section
+        const commentsSection = document.createElement('div');
+        commentsSection.className = 'comments-section';
+        postContainer.appendChild(commentsSection);
+
+        // Process comments
+        if (post.comments && post.comments.length > 0) {
+            post.comments.forEach(comment => {
+                const isCurrentUserComment = comment.postedBy._id === currentUserID;
+
+                // Create the outer container
+                const commentContainer = document.createElement('div');
+                commentContainer.className = isCurrentUserComment ? 'commentContainer current-user-commentContainer' : 'commentContainer';
+
+                // Create the comment div
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment';
+
+                // Create and append comment text
+                const commentText = document.createElement('p');
+                commentText.className = 'commentText';
+                commentText.textContent = comment.text;
+                commentDiv.appendChild(commentText);
+
+                // Append comment to its container
+                commentContainer.appendChild(commentDiv);
+
+                // Create and append comment info (posted by and date)
+                const commentInfoDiv = document.createElement('div');
+                commentInfoDiv.className = 'postedBy';
+                commentInfoDiv.textContent = `Posted by: ${comment.postedBy.name} at ${new Date(comment.created).toLocaleString()}`;
+                commentContainer.appendChild(commentInfoDiv);
+
+                // Append the entire comment container to the comments section
+                commentsSection.appendChild(commentContainer);
+            });
+        } else {
+            const noCommentsMessage = document.createElement('p');
+            noCommentsMessage.textContent = 'No comments yet.';
+            commentsSection.appendChild(noCommentsMessage);
+        }
     }
 }
 
-function createPost() {
-    const title = document.getElementById('postTitle').value;
-    const content = document.getElementById('postContent').value;
-    const imageElement = document.getElementById('imagePreview'); // The ID of your <img> element
+
+
+
+function submitComment(postId) {
+    const commentText = document.querySelector('.comment-form textarea').value;
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
+    // Ensure user is logged in
     if (!userInfo || !userInfo.token) {
-        console.error("User is not logged in or token is missing.");
+        showToast('You must be logged in to add a comment.', 'error');
         return;
     }
 
-    // Function to convert blob to Base64
-    function blobToBase64(blob) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    }
+    // Data to be sent in the request
+    const commentData = { comment: commentText };
 
-    if (imageElement.src && imageElement.src.startsWith('blob:')) {
-        // Fetch the blob from the blob URL and then convert to Base64
-        fetch(imageElement.src)
-            .then(response => response.blob())
-            .then(blob => blobToBase64(blob))
-            .then(base64Image => {
-                // Once converted, send the request with the image
-                sendPostRequest(title, content, base64Image);
-                window.location.href = 'home.html';
-            }).catch(error => {
-                console.error("Error processing image:", error);
-            });
-    } else {
-        // If no image, send the request without it
-        sendPostRequest(title, content);
-        window.location.href = 'home.html';
-    }
-}
-
-
-function sendPostRequest(title, content, image = null) {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    const requestData = { title, content };
-    if (image) requestData.image = image;
-
-    fetch('http://localhost:9000/api/post/create', {
-        method: 'POST',
+    // Make a PUT request to add the comment
+    fetch(`http://localhost:9000/api/comment/post/${postId}`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${userInfo.token}`
         },
-        body: JSON.stringify(requestData)
+        body: JSON.stringify(commentData)
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Server responded with an error!');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Success:", data);
-            // Handle success
-        })
-        .catch(error => {
-            console.error("Error Creating Post:", error);
-        });
-}
-
-function createPostCard(post) {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    // Create card container
-    const card = document.createElement('div');
-    card.classList.add('post-card');
-
-    // Create and set title
-    const title = document.createElement('h2');
-    title.textContent = post.title;
-    card.appendChild(title);
-
-    // Create and set date
-    const date = document.createElement('p');
-    date.textContent = new Date(post.createdAt).toLocaleDateString(); // Format date as needed
-    date.style.color = 'lightgray'; // Set the date color to light gray
-    card.appendChild(date);
-
-    // Create and set image with fixed size
-    if (post.image && post.image.url) {
-        const img = document.createElement('img');
-        img.src = post.image.url;
-        img.alt = 'Post Image';
-        img.style.width = '100%'; // Full width of the card
-        img.style.height = '200px'; // Fixed height
-        img.style.objectFit = 'cover'; // Ensures the image covers the area without stretching
-        card.appendChild(img);
-    }
-
-    // Create and set content with limited height
-    const content = document.createElement('p');
-    content.textContent = post.content;
-    content.style.height = '30px';
-    content.style.overflow = 'hidden';
-    card.appendChild(content);
-
-    // Create interactions container
-    const interactions = document.createElement('div');
-    interactions.style.display = 'flex';
-    interactions.style.justifyContent = 'space-between';
-    interactions.style.alignItems = 'center';
-
-    // Left side - Likes
-    const likesContainer = document.createElement('div');
-
-    // Heart icon for likes
-    const heartIcon = document.createElement('i');
-    const userLikesThisPost = post.likes.includes(userInfo.id);
-    heartIcon.className = userLikesThisPost ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-    heartIcon.style.cursor = 'pointer';
-    heartIcon.style.color = 'red';
-    heartIcon.onclick = function () {
-        addRemoveLike(post._id, userLikesThisPost);
-    };
-    likesContainer.appendChild(heartIcon);
-
-    // Number of likes
-    const likesCount = document.createElement('span');
-    likesCount.textContent = ` ${post.likes.length} Like(s)`;
-    likesCount.style.color = 'white';
-    likesContainer.appendChild(likesCount);
-
-    interactions.appendChild(likesContainer);
-
-    // Right side - Comments
-    const commentsContainer = document.createElement('div');
-
-    // Number of comments
-    const commentsCount = document.createElement('span');
-    commentsCount.textContent = `${post.comments.length} `;
-    commentsCount.style.color = 'white';
-    commentsContainer.appendChild(commentsCount);
-
-    // Message icon for comments
-    const messageIcon = document.createElement('i');
-    messageIcon.className = 'fa-solid fa-message';
-    messageIcon.style.cursor = 'pointer';
-    messageIcon.style.color = 'blue';
-    commentsContainer.appendChild(messageIcon);
-
-    interactions.appendChild(commentsContainer);
-
-    card.appendChild(interactions);
-
-    return card;
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    fetchPosts();
-
-    socket.on('postChange', (change) => {
-        if (change.operationType === 'insert' || change.operationType === 'update') {
-            fetchPosts();
+    .then(response => {
+        if (!response.ok) {
+            // If server responds with an error
+            throw new Error('Failed to post comment');
         }
-    });
-
-    socket.on('delete', () => {
-        fetchPosts();
-    });
-
-    socket.on('update', () => {
-        fetchPosts();
-    });    
-});
-
-function fetchPosts() {
-    fetch(`http://localhost:9000/api/posts/show`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.posts.length > 0) {
-                const postContainer = document.getElementById('postContainer');
-                postContainer.innerHTML = ''; // Clear existing posts
-                data.posts.forEach(post => {
-                    const postCard = createPostCard(post);
-                    postContainer.appendChild(postCard);
-                });
-            }
-        })
-        .catch(error => console.error('Error fetching posts:', error));
-}
-
-
-function addRemoveLike(postId, isLiked) {
-    // Check if user is logged in
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    if (!userInfo || !userInfo.token) {
-        console.log('User not logged in or token is missing');
-        return;
-    }
-
-    const url = isLiked ?
-        `http://localhost:9000/api/removelike/post/${postId}` :
-        `http://localhost:9000/api/addlike/post/${postId}`;
-
-    // API request to add or remove the like
-    fetch(url, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userInfo.token}` // Assuming you use token-based authentication
+        return response.json();
+    })
+    .then(data => {
+        if (data.status) {
+            // Comment added successfully
+            showToast('Comment added successfully', 'success');
+            // Optionally, refresh the post data to show the new comment
+        } else {
+            // Handle response when adding a comment is unsuccessful
+            showToast('Failed to add comment: ' + data.message, 'error');
         }
     })
-        .then(response => {
-            if (!response.ok) {
-                response.text().then(text => {
-                    throw new Error(`Failed to toggle like: ${text}`);
-                });
-            }            
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                // Update the UI based on the new like status
-                updateLikeUI(postId, data.post, !isLiked);
-            } else {
-                console.error('Error toggling like:', data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error toggling like:', error.message || error);
-        });        
+    .catch(error => {
+        // Handle network errors or errors thrown from response handling
+        showToast(`Error: ${error.message}`, 'error');
+    });
+
+    // Clear the textarea after submitting
+    document.querySelector('.comment-form textarea').value = '';
 }
 
-function updatePost(post) {
-    // Assuming each post card has an id like 'post_123'
-    const postCard = document.querySelector(`#post_${post._id}`);
-    if (postCard) {
-        // Update the like count
-        const likeCountElement = postCard.querySelector('.like-count');
-        if (likeCountElement) {
-            likeCountElement.textContent = `${post.likes.length} Like(s)`;
-        }
-
-        // Optionally, update the like button appearance
-        // For example, if you toggle a class based on whether the user has liked the post
-    }
-}
-
-function updateLikeUI(postId, isLiked) {
-    // Find the post in the DOM
-    const postCard = document.querySelector(`#post_${postId}`); // Assuming each post has an ID like 'post_123'
-    
-    // Update the like button appearance
-    const likeButton = postCard.querySelector('.like-button'); // Assuming there's a like button with class 'like-button'
-    likeButton.classList.toggle('liked', isLiked); // Toggle a class to change the appearance
-
-    // Update the like count
-    const likeCountElement = postCard.querySelector('.like-count'); // Assuming there's a span or similar element for the like count
-    let likeCount = parseInt(likeCountElement.textContent);
-    likeCount = isLiked ? likeCount + 1 : likeCount - 1;
-    likeCountElement.textContent = `${likeCount} Like(s)`;
-}
-
-function setupDragAndDrop() {
-    const dropArea = document.getElementById('dropArea');
-    const imageInput = document.getElementById('postImage');
-  
-    // Create the imagePreview element as an img element
-    const imagePreview = document.createElement('img');
-    imagePreview.id = 'imagePreview';
-    imagePreview.style.display = 'none'; // Initially hide it
-    imagePreview.classList.add('previewImage'); // Add the 'previewImage' class
-  
-    // Append the imagePreview element to the dropArea div
-    dropArea.appendChild(imagePreview);
-  
-    dropArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropArea.classList.add('active');
-    });
-  
-    dropArea.addEventListener('dragleave', () => {
-      dropArea.classList.remove('active');
-    });
-  
-    dropArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropArea.classList.remove('active');
-      const file = e.dataTransfer.files[0];
-      handleDroppedImage(file, dropArea, imagePreview);
-    });
-  
-    function handleDroppedImage(file, dropArea, imagePreview) {
-      const img = new Image();
-  
-      img.onload = function () {
-        const elementToRemove = document.getElementById('dragDropText');
-        if (elementToRemove) {
-          elementToRemove.remove();
-        }
-        dropArea.classList.remove('drop-area');
-  
-        // Set the new image source
-        imagePreview.src = window.URL.createObjectURL(file);
-  
-        // Show the image preview by setting its display to 'block'
-        imagePreview.style.display = 'block';
-      };
-  
-      img.src = window.URL.createObjectURL(file);
-    }
-  }
-  
-  // Call the setupDragAndDrop function to set up the event listeners
-  setupDragAndDrop();

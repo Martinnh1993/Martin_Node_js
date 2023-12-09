@@ -1,63 +1,69 @@
-document.addEventListener('DOMContentLoaded', function() {
-    adminFetchPosts(); 
-});
+// dom to listen for the socket response from the backend 
+document.addEventListener('DOMContentLoaded', function () {
+    adminFetchPosts()
+
+    socket.on('postChange', (change) => {
+        if (change.operationType === 'insert') {
+            adminFetchPosts()
+        } else if (change.operationType === 'update') {
+            adminFetchPosts()
+        } else if (change.operationType === 'delete') {
+            adminFetchPosts()
+        }
+    })
+})
 
 
+// takes the user to createPost.html
+function createNewPostForm() {
+    const userInfoJson = localStorage.getItem('userInfo')
+    if (userInfoJson) {
+        const userInfo = JSON.parse(userInfoJson)
+        console.log(userInfo)
 
-
-
-
-// Function to handle post editing
-function editPost(post) {
-    // Logic to edit the post
-}
-
-// Function to handle post deletion
-/* function deletePost(postId) {
-    if (confirm('Are you sure you want to delete this post?')) {
-        fetch(`http://localhost:9000/delete/post/${postId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                // Include authorization headers if needed
-                'Authorization': 'Bearer ' + yourAuthToken, // Replace with actual token
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const postItem = document.getElementById(`post_${postId}`);
-                if (postItem) {
-                    postItem.remove();
-                }
-            } else {
-                alert('Error deleting post: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error deleting post:', error);
-            alert('Error deleting post');
-        });
+        // Check if the user is authenticated and is an admin
+        if (userInfo.role === 'admin') {
+            window.location.href = 'createPost.html'
+        } else {
+            showToast('Only admin users can create posts.', 'error')
+        }
+    } else {
+        showToast('You must be logged in to create posts.', 'error')
     }
-} */
-
+}
 
 
 function adminFetchPosts() {
     fetch(`http://localhost:9000/api/posts/show`)
         .then(response => response.json())
         .then(data => {
+            const adminPostContainer = document.getElementById('postsList');
+            if (!adminPostContainer) {
+                showToast('Admin post container not found', 'error');
+                return;
+            }
+
+            // Clear existing posts before repopulating
+            adminPostContainer.innerHTML = '';
+
             if (data.success && data.posts.length > 0) {
-                const adminPostContainer = document.getElementById('postsList');
-                adminPostContainer.innerHTML = ''; // Clear existing posts
                 data.posts.forEach(post => {
                     const postCard = createPostListItem(post);
                     adminPostContainer.appendChild(postCard);
                 });
+            } else {
+                // Handle the case where there are no posts
+                const noPostsMessage = document.createElement('li');
+                noPostsMessage.textContent = 'No posts available.';
+                adminPostContainer.appendChild(noPostsMessage);
             }
         })
-        .catch(error => console.error('Error fetching posts:', error));
+        .catch(error => {
+            console.error('Error fetching posts:', error);
+            showToast('Error fetching posts', 'error');
+        });
 }
+
 
 
 function createPostListItem(post) {
@@ -98,14 +104,20 @@ function createPostListItem(post) {
     return listItem;
 }
 
+
+// Function to handle post editing
+function editPost(post) {
+    // Logic to edit the post
+}
+
+
 // Function to handle post deletion
 function deletePost(postId) {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (!userInfo || !userInfo.token) {
-        alert("You must be logged in to delete posts.");
+        showToast('You must be logged in to delete posts.', 'error');
         return;
     }
-    console.log("token works");
     
     if (confirm('Are you sure you want to delete this post?')) {
         fetch(`http://localhost:9000/api/delete/post/${postId}`, {
@@ -117,30 +129,19 @@ function deletePost(postId) {
         })
         .then(response => {
             if (!response.ok) {
-                console.log(response)
                 throw new Error('Network response was not ok');
-                
             }
-            
             return response.json();
         })
         .then(data => {
             if (data.success) {
-                const postItem = document.getElementById(`post_${postId}`);
-                if (postItem) {
-                    postItem.remove();
-                }
+                showToast(`Post with ID: ${postId} has been deleted`, 'success');
             } else {
-                alert('Error deleting post: ' + data.message);
+                throw new Error(`Error deleting post: ${data.message}`);
             }
         })
         .catch(error => {
-            console.error('Error deleting post:', error);
-            alert('Error deleting post');
+            showToast(`Error deleting post with ID: ${postId} - ${error.message}`, 'error'); // Modified to show the error message
         });
     }
 }
-
-
-
-

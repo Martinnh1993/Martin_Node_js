@@ -1,5 +1,3 @@
-let toastBox = document.getElementById('toastBox');
-
 // Initialize Socket.IO client and send token
 const socket = io('http://localhost:9000');
 
@@ -161,37 +159,9 @@ function makeAuthenticatedRequest(endpoint, method = 'GET', body = null) {
     })
     .then(response => response.json())
     .then(data => {
-        // Handle data
+        showLoginForm(data.error, error)
     })
     .catch(error => {
-        // Handle error
+        showToast(error, 'error')
     });
 }
-
-
-
-
-function showToast(message, type) {
-    let toast = document.createElement('div');
-    toast.classList.add('toast');
-
-    const successIconHTML = '<i class="fa-solid fa-circle-check"></i>'; // Success icon
-    const errorIconHTML = '<i class="fa-solid fa-circle-exclamation"></i>'; // Error icon
-
-    // Append the icon based on the message type
-    toast.innerHTML = (type === 'success' ? successIconHTML : errorIconHTML) + ' ' + message;
-
-    // Separately add the 'invalid' class for error messages
-    if (type === 'error') {
-        toast.classList.add('invalid');
-    }
-
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.remove();
-    }, 6000);
-}
-
-
-
-console.log("Stored token:", localStorage.getItem('token')); // Log the stored token

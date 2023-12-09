@@ -3,32 +3,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>post</title>
+    <title>Profile</title>
 </head>
 <body>
     <div class="topnav">
         <div class="left">
             <a href="home.html" >Home</a>
-            <a href="about.html">About</a>
+            <a href="about.html" >About</a>
             <a id="Posts" href="posts.html" style="display: none;">Posts</a> <!-- Hidden by default -->
+            <a id="Posts" href="profile.html" style="display: none;" class="active">Posts</a> <!-- Hidden by default -->
         </div>
-        
+
         <div class="topnav">
             <!-- other elements -->
             <a id="login-logout-icon" href="javascript:void(0);"><i class="fa-solid"></i></a>
         </div>
     </div>
 
-    <div id="toastBox"></div>
+    <h2>profile</h2>
 
-    <div class="postWithId">
-
-    </div>
     
+
 
     <script src="http://localhost:9000/socket.io/socket.io.js"></script>
     <script src="../src/toast.js"></script>
     <script src="../src/auth.js"></script>
-    <script src="../src/post.js"></script>
 </body>
 </html>
