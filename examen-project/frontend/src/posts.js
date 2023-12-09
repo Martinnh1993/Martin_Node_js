@@ -3,11 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     adminFetchPosts()
 
     socket.on('postChange', (change) => {
-        if (change.operationType === 'insert') {
-            adminFetchPosts()
-        } else if (change.operationType === 'update') {
-            adminFetchPosts()
-        } else if (change.operationType === 'delete') {
+        if (change.operationType === 'insert' || change.operationType === 'update' || change.operationType === 'delete') {
             adminFetchPosts()
         }
     })

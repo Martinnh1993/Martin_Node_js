@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchPosts()
 
     socket.on('postChange', (change) => {
-        if (change.operationType === 'insert' || change.operationType === 'update') {
+        if (change.operationType === 'insert' || change.operationType === 'update' || change.operationType === 'delete') {
             fetchPosts()
         }
     })
@@ -62,11 +62,14 @@ function createPostCard(post) {
     const likesContainer = document.createElement('div')
 
     // Heart icon for likes
-    const heartIcon = document.createElement('i')
-    const userLikesThisPost = post.likes.includes(userInfo.id)
-    heartIcon.className = userLikesThisPost ? 'fa-solid fa-heart' : 'fa-regular fa-heart'
-    heartIcon.style.cursor = 'pointer'
-    heartIcon.style.color = 'red'
+    const heartIcon = document.createElement('i');
+    
+    //Check if userInfo is not null before accessing its properties
+    const userLikesThisPost = userInfo ? post.likes.includes(userInfo.id) : false;
+
+    heartIcon.className = userLikesThisPost ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+    heartIcon.style.cursor = 'pointer';
+    heartIcon.style.color = 'red';
     heartIcon.onclick = function () {
         addRemoveLike(post._id, userLikesThisPost)
     };

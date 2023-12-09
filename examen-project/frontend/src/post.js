@@ -44,6 +44,7 @@ function fetchPostData(postId) {
 }
 
 
+
 function displayPost(data) {
     const postContainer = document.querySelector('.postWithId');
     const currentUserID = JSON.parse(localStorage.getItem('userInfo'))?.id;
@@ -72,6 +73,9 @@ function displayPost(data) {
         const content = document.createElement('p');
         content.textContent = post.content;
         postContainer.appendChild(content);
+
+        // Check if a user is logged in before adding comments
+        if (currentUserID) {
 
         // Create and append comment form
         const commentForm = document.createElement('form');
@@ -128,7 +132,14 @@ function displayPost(data) {
 
                 // Append the entire comment container to the comments section
                 commentsSection.appendChild(commentContainer);
-            });
+            })
+        } else {
+            // Display a message indicating that login is required to view comments
+            const loginMessage = document.createElement('p');
+            loginMessage.textContent = 'Log in to see comments';
+            loginMessage.className = 'login-to-comment'; // Add a class for styling
+            postContainer.appendChild(loginMessage);
+        } 
         } else {
             const noCommentsMessage = document.createElement('p');
             noCommentsMessage.textContent = 'No comments yet.';
@@ -137,10 +148,105 @@ function displayPost(data) {
     }
 }
 
+function displayPost(data) {
+    const postContainer = document.querySelector('.postWithId');
+    const currentUserID = JSON.parse(localStorage.getItem('userInfo'))?.id;
+
+    // Clear previous content
+    postContainer.innerHTML = '';
+
+    if (data.success && data.posts) {
+        const post = data.posts;
+
+        // Create and append title element
+        const title = document.createElement('h1');
+        title.textContent = post.title;
+        postContainer.appendChild(title);
+
+        // Create and append image element, if available
+        if (post.image && post.image.url) {
+            const image = document.createElement('img');
+            image.src = post.image.url;
+            image.alt = 'Post Image';
+            image.classList.add('postImage');
+            postContainer.appendChild(image);
+        }
+
+        // Create and append content element
+        const content = document.createElement('p');
+        content.textContent = post.content;
+        postContainer.appendChild(content);
+
+        // Create and append comments section
+        const commentsSection = document.createElement('div');
+        commentsSection.className = 'comments-section';
+
+        if (currentUserID) {
+            // User is logged in
+
+            // Create and append comment form
+            const commentForm = document.createElement('form');
+            commentForm.className = 'comment-form';
+            commentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitComment(post._id);
+            });
+
+            const textarea = document.createElement('textarea');
+            textarea.placeholder = 'Add a comment...';
+            textarea.required = true;
+            commentForm.appendChild(textarea);
+
+            const submitButton = document.createElement('button');
+            submitButton.type = 'submit';
+            submitButton.textContent = 'Post Comment';
+            commentForm.appendChild(submitButton);
+
+            commentsSection.appendChild(commentForm);
+
+            // Process and display comments
+            if (post.comments && post.comments.length > 0) {
+                post.comments.forEach(comment => {
+                    const commentContainer = document.createElement('div');
+                    commentContainer.className = 'commentContainer';
+
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'comment';
+                    
+                    const commentText = document.createElement('p');
+                    commentText.className = 'commentText';
+                    commentText.textContent = comment.text;
+
+                    commentDiv.appendChild(commentText);
+                    commentContainer.appendChild(commentDiv);
+
+                    commentsSection.appendChild(commentContainer);
+                });
+            } else {
+                const noCommentsMessage = document.createElement('p');
+                noCommentsMessage.textContent = 'No comments yet.';
+                commentsSection.appendChild(noCommentsMessage);
+            }
+        } else {
+            // User is not logged in
+            // Display a message indicating that login is required to view comments
+            const loginMessage = document.createElement('p');
+            loginMessage.textContent = 'Log in to see comments';
+            loginMessage.className = 'login-to-comment'; // Add a class for styling
+            loginMessage.addEventListener('click', function() {
+                window.location.href = 'loginSignup.html'; // Redirects to loginSignup.html on click
+            });
+            commentsSection.appendChild(loginMessage);
+        }
+
+        postContainer.appendChild(commentsSection);
+    }
+}
 
 
 
-function submitComment(postId) {
+
+/* function submitComment(postId) {
     const commentText = document.querySelector('.comment-form textarea').value;
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
@@ -186,5 +292,5 @@ function submitComment(postId) {
 
     // Clear the textarea after submitting
     document.querySelector('.comment-form textarea').value = '';
-}
+} */
 

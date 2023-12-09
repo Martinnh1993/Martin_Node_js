@@ -317,6 +317,16 @@ button {
     clear: both; /* Clear floats */
 }
 
+.login-to-comment {
+    background-color: #444; /* Dark background for the comment */
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff;
+    width: 50%;
+    margin: 0 auto; /* Centers the element */
+    display: block; /* Ensures the element is block-level */
+}
+
 .comment {
     background-color: #444; /* Dark background for the comment */
     padding: 10px;
