@@ -28,7 +28,7 @@ function createPost() {
             .then(base64Image => {
                 // Once converted, send the request with the image
                 sendPostRequest(title, content, base64Image)
-                window.location.href = 'home.html';
+                window.location.href = 'home.html'
             }).catch(error => {
                 showToast('Error processing image:', error)
             });
@@ -56,73 +56,72 @@ function sendPostRequest(title, content, image = null) {
         .then(response => {
             if (!response.ok) {
                 showToast('server responds with an error!', 'error')
-                throw new Error('Server responded with an error!');
+                throw new Error('Server responded with an error!')
             }
             return response.json()
         })
         .then(data => {
-            console.log("Success:", data);
+            console.log("Success:", data)
             showToast(data, 'Success')
         })
         .catch(error => {
             showToast(error, 'error')
-        });
+        })
 }
 
 // drag and drop for the image
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('dropArea')) {
-        setupDragAndDrop();
+        setupDragAndDrop()
     }
-});
+})
 
 function setupDragAndDrop() {
-    const dropArea = document.getElementById('dropArea');
-    const imageInput = document.getElementById('postImage');
+    const dropArea = document.getElementById('dropArea')
+    const imageInput = document.getElementById('postImage')
   
     // Create the imagePreview element as an img element
-    const imagePreview = document.createElement('img');
-    imagePreview.id = 'imagePreview';
-    imagePreview.style.display = 'none'; // Initially hide it
-    imagePreview.classList.add('previewImage'); // Add the 'previewImage' class
+    const imagePreview = document.createElement('img')
+    imagePreview.id = 'imagePreview'
+    imagePreview.style.display = 'none'
+    imagePreview.classList.add('previewImage')
   
     // Append the imagePreview element to the dropArea div
-    dropArea.appendChild(imagePreview);
+    dropArea.appendChild(imagePreview)
   
     dropArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropArea.classList.add('active');
-    });
+      e.preventDefault()
+      dropArea.classList.add('active')
+    })
   
     dropArea.addEventListener('dragleave', () => {
-      dropArea.classList.remove('active');
-    });
+      dropArea.classList.remove('active')
+    })
   
     dropArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropArea.classList.remove('active');
-      const file = e.dataTransfer.files[0];
-      handleDroppedImage(file, dropArea, imagePreview);
-    });
+      e.preventDefault()
+      dropArea.classList.remove('active')
+      const file = e.dataTransfer.files[0]
+      handleDroppedImage(file, dropArea, imagePreview)
+    })
   
     function handleDroppedImage(file, dropArea, imagePreview) {
-      const img = new Image();
+      const img = new Image()
   
       img.onload = function () {
         const elementToRemove = document.getElementById('dragDropText');
         if (elementToRemove) {
-          elementToRemove.remove();
+          elementToRemove.remove()
         }
-        dropArea.classList.remove('drop-area');
+        dropArea.classList.remove('drop-area')
   
         // Set the new image source
-        imagePreview.src = window.URL.createObjectURL(file);
+        imagePreview.src = window.URL.createObjectURL(file)
   
         // Show the image preview by setting its display to 'block'
-        imagePreview.style.display = 'block';
+        imagePreview.style.display = 'block'
       };
   
-      img.src = window.URL.createObjectURL(file);
+      img.src = window.URL.createObjectURL(file)
     }
   }
-  

@@ -1,0 +1,55 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/f42273f0ca.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>post</title>
+</head>
+<body>
+    <div class="topnav">
+        <div class="left">
+            <a href="home.html" >Home</a>
+            <a href="about.html">About</a>
+            <a id="Posts" href="posts.html" style="display: none;">Posts</a> <!-- Hidden by default -->
+        </div>
+        
+        <div class="topnav">
+            <a id="login-logout-icon" href="javascript:void(0);"><i class="fa-solid"></i></a>
+        </div>
+    </div>
+
+    <div id="toastBox"></div>
+
+    <div class="edit-post-container">
+        <form id="edit-form" class="edit-form">
+
+            <!-- Input field for the post title -->
+            <div class="form-group">
+                <label for="edit-title">Title</label>
+                <input type="text" id="edit-title" class="form-control">
+            </div>
+
+            <!-- Image preview (if applicable) -->
+            <div id="dropArea" class="form-group">
+                <label>Current Image</label>
+                <img id="edit-image-preview" src="" alt="Post Image" class="image-preview">
+            </div>
+
+            <!-- Textarea for the post content -->
+            <div class="form-group">
+                <label for="edit-content">Content</label>
+                <textarea id="edit-content" class="form-control"></textarea>
+            </div>
+
+            <!-- Button for submitting the form -->
+            <button type="button" class="btn btn-primary" onclick="submitPostUpdate()">Update Post</button>
+        </form>
+    </div>
+
+    <script src="http://localhost:9000/socket.io/socket.io.js"></script>
+    <script src="../src/toast.js"></script>
+    <script src="../src/auth.js"></script>
+    <script src="../src/editPost.js"></script>
+</body>
+</html>

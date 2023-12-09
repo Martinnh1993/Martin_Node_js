@@ -18,7 +18,7 @@
   }
   
   /* Change the color of links on hover */
-  .topnav a:hover {
+  .topnav a:hover, button:hover, .login-to-comment:hover {
     background-color: #ddd;
     color: black;
   }
@@ -114,11 +114,6 @@ button {
     transition: background-color 0.3s;
 }
 
-
-.buttonContainer button:hover {
-    background-color: #555;
-}
-
 /* home page styles */
 .container {
     max-width: 100%; 
@@ -131,7 +126,6 @@ button {
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-   
 }
 
 .post-card {
@@ -187,9 +181,15 @@ button {
     object-fit: cover;
 }
 
-.post-item .post-title,
+.post-item .post-title {
+    flex-grow: 1;
+    width: 25%;
+}
+
+
 .post-item .post-content {
     flex-grow: 1;
+   
 }
 
 .delete-post-btn {
@@ -313,36 +313,81 @@ button {
 /* Comments section */
 .commentContainer {
     width: 70%;
-    margin-bottom: 10px; /* Space between comments */
-    clear: both; /* Clear floats */
+    margin-bottom: 10px;
+    clear: both; 
 }
 
 .login-to-comment {
-    background-color: #444; /* Dark background for the comment */
+    background-color: #444; 
     padding: 10px;
     border-radius: 5px;
     color: #fff;
-    width: 50%;
-    margin: 0 auto; /* Centers the element */
-    display: block; /* Ensures the element is block-level */
+    width: 20%;
+    margin: 0 auto; 
+    display: block;
+    cursor: pointer;
 }
 
+
+
 .comment {
-    background-color: #444; /* Dark background for the comment */
+    background-color: #444; 
     padding: 10px;
     border-radius: 5px;
-    color: #fff; /* Light color for the comment text */
+    color: #fff; 
 }
 
 .postedBy {
     font-size: 0.8em;
-    color: lightgray; /* Subtle color for the metadata */
-    margin-top: 5px; /* Small space between the comment text and metadata */
+    color: lightgray; 
+    margin-top: 5px; 
 }
 
 .current-user-commentContainer {
-    float: right; /* Aligns the current user's comment container to the right */
+    float: right; 
 }
+
+/* edit post styling */
+.edit-post-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    color: #f2f2f2;
+    border-radius: 8px;
+}
+
+.image-preview {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #555; /* Border color to match the theme */
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #f2f2f2; /* Light text if the background is dark */
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    background-color: #333; /* Darker background for input */
+    color: #fff; /* Light text */
+    border: 1px solid #555;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+
+
 
 
 /* toast */

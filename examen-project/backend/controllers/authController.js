@@ -37,7 +37,7 @@ exports.signin = async (req, res, next) => {
             return next(new ErrorResponse('Invalid credentials', 400))
         }
         // check password 
-        const isMatched = await user.comparePassword(password);
+        const isMatched = await user.comparePassword(password)
         if (!isMatched) {
             return next(new ErrorResponse('Invalid credentials', 400))
         }
@@ -55,9 +55,8 @@ const sendTokenResponse = (user, statusCode, res) => {
         id: user._id,
         role: user.role,
         token: token
-    });
-};
-
+    })
+}
 
 // log out
 exports.logout = (req, res, next) => {

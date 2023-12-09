@@ -14,22 +14,22 @@ exports.isAuthendicated = async (req, res, next) => {
     }
 
     if (!token) {
-        return next(new ErrorResponse('You must be logged in...', 401));
+        return next(new ErrorResponse('You must be logged in...', 401))
     }
 
     try {
         // Verify token and decode it
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Decoded Token:", decoded); // Log the decoded token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        console.log("Decoded Token:", decoded)
 
         // Find user based on ID in decoded token
-        req.user = await User.findById(decoded.id);
-        console.log("User from token:", req.user); // Log the user obtained from the token
+        req.user = await User.findById(decoded.id)
+        console.log("User from token:", req.user)
 
         next();
     } catch (error) {
-        console.error("Error in isAuthenticated middleware:", error); // Log the error
-        return next(new ErrorResponse('You must be logged in', 401));
+        console.error("Error in isAuthenticated middleware:", error)
+        return next(new ErrorResponse('You must be logged in', 401))
     }
 }
 

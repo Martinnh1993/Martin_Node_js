@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 })
 
-
 // takes the user to createPost.html
 function createNewPostForm() {
     const userInfoJson = localStorage.getItem('userInfo')
@@ -28,91 +27,95 @@ function createNewPostForm() {
     }
 }
 
-
 function adminFetchPosts() {
     fetch(`http://localhost:9000/api/posts/show`)
         .then(response => response.json())
         .then(data => {
-            const adminPostContainer = document.getElementById('postsList');
+            const adminPostContainer = document.getElementById('postsList')
             if (!adminPostContainer) {
-                showToast('Admin post container not found', 'error');
+                showToast('Admin post container not found', 'error')
                 return;
             }
 
             // Clear existing posts before repopulating
-            adminPostContainer.innerHTML = '';
+            adminPostContainer.innerHTML = ''
 
             if (data.success && data.posts.length > 0) {
                 data.posts.forEach(post => {
-                    const postCard = createPostListItem(post);
-                    adminPostContainer.appendChild(postCard);
+                    const postCard = createPostListItem(post)
+                    adminPostContainer.appendChild(postCard)
                 });
             } else {
                 // Handle the case where there are no posts
-                const noPostsMessage = document.createElement('li');
-                noPostsMessage.textContent = 'No posts available.';
-                adminPostContainer.appendChild(noPostsMessage);
+                const noPostsMessage = document.createElement('li')
+                noPostsMessage.textContent = 'No posts available.'
+                adminPostContainer.appendChild(noPostsMessage)
             }
         })
         .catch(error => {
-            console.error('Error fetching posts:', error);
-            showToast('Error fetching posts', 'error');
-        });
+            console.error('Error fetching posts:', error)
+            showToast('Error fetching posts', 'error')
+        })
 }
-
-
 
 function createPostListItem(post) {
-    const listItem = document.createElement('li');
-    listItem.className = 'post-item';
+    const listItem = document.createElement('li')
+    listItem.className = 'post-item'
 
-    const image = document.createElement('img');
-    image.src = post.image.url; // Adjust according to your data structure
-    image.alt = 'Post Image';
-    image.className = 'post-image';
+    const image = document.createElement('img')
+    image.src = post.image.url
+    image.alt = 'Post Image'
+    image.className = 'post-image'
 
-    const title = document.createElement('h3');
-    title.textContent = post.title;
-    title.className = 'post-title';
+    // create and populate title
+    const title = document.createElement('h3')
+    const maxTitleLength = 50
+    title.textContent = post.title.length > maxTitleLength 
+        ? post.title.substring(0, maxTitleLength) + '...' 
+        : post.title
+    title.className = 'post-title'
 
-    const content = document.createElement('p');
-    content.textContent = post.content;
-    content.className = 'post-content';
+    // create and populate content 
+    const content = document.createElement('p')
+    const maxLength = 500
+    content.textContent = post.content.length > maxLength 
+        ? post.content.substring(0, maxLength) + '...' 
+        : post.content
+    content.className = 'post-content'
 
-    const editButton = document.createElement('button');
-    editButton.textContent = 'Edit';
-    editButton.className = 'edit-post-btn';
-    editButton.setAttribute('data-post-id', post._id);
-    editButton.setAttribute('onclick', 'editPost(this.getAttribute("data-post-id"))');
+    const editButton = document.createElement('button')
+    editButton.textContent = 'Edit'
+    editButton.className = 'edit-post-btn'
+    editButton.setAttribute('data-post-id', post._id)
+    editButton.setAttribute('onclick', 'editPost(this.getAttribute("data-post-id"))')
 
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.className = 'delete-post-btn';
-    deleteButton.setAttribute('data-post-id', post._id);
-    deleteButton.setAttribute('onclick', `deletePost('${post._id}')`);
+    const deleteButton = document.createElement('button')
+    deleteButton.textContent = 'Delete'
+    deleteButton.className = 'delete-post-btn'
+    deleteButton.setAttribute('data-post-id', post._id)
+    deleteButton.setAttribute('onclick', `deletePost('${post._id}')`)
 
-    listItem.appendChild(image);
-    listItem.appendChild(title);
-    listItem.appendChild(content);
-    listItem.appendChild(editButton);
-    listItem.appendChild(deleteButton);
+    listItem.appendChild(image)
+    listItem.appendChild(title)
+    listItem.appendChild(content)
+    listItem.appendChild(editButton)
+    listItem.appendChild(deleteButton)
 
-    return listItem;
+    return listItem
 }
-
 
 // Function to handle post editing
-function editPost(post) {
-    // Logic to edit the post
+function editPost(postId) {
+    // Redirect to the editPost.html page with the post's ID as a query parameter
+    window.location.href = `editPost.html?id=${postId}`
 }
-
 
 // Function to handle post deletion
 function deletePost(postId) {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     if (!userInfo || !userInfo.token) {
-        showToast('You must be logged in to delete posts.', 'error');
-        return;
+        showToast('You must be logged in to delete posts.', 'error')
+        return
     }
     
     if (confirm('Are you sure you want to delete this post?')) {
@@ -125,19 +128,19 @@ function deletePost(postId) {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error('Network response was not ok')
             }
-            return response.json();
+            return response.json()
         })
         .then(data => {
             if (data.success) {
-                showToast(`Post with ID: ${postId} has been deleted`, 'success');
+                showToast(`Post with ID: ${postId} has been deleted`, 'success')
             } else {
-                throw new Error(`Error deleting post: ${data.message}`);
+                throw new Error(`Error deleting post: ${data.message}`)
             }
         })
         .catch(error => {
-            showToast(`Error deleting post with ID: ${postId} - ${error.message}`, 'error'); // Modified to show the error message
-        });
+            showToast(`Error deleting post with ID: ${postId} - ${error.message}`, 'error')
+        })
     }
 }
